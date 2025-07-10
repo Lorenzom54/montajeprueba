@@ -4,7 +4,6 @@ interface Props {
     id: string;
     nombre: string;
     estado: string;
-    cliente: string;
     fecha_inicio: string;
     fecha_fin: string;
     ubicacion: string;
@@ -14,6 +13,28 @@ interface Props {
 }
 
 const { obra } = Astro.props;
+
+// Función para formatear fechas
+function formatDate(dateString) {
+  if (!dateString) return '-';
+  return new Date(dateString).toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+// Función para calcular días restantes
+function getDaysRemaining(fechaFin) {
+  if (!fechaFin) return null;
+  const today = new Date();
+  const endDate = new Date(fechaFin);
+  const diffTime = endDate - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+const daysRemaining = getDaysRemaining(obra.fecha_fin);
 ---
 
 <div slot="general" class="detail-content">
@@ -26,16 +47,19 @@ const { obra } = Astro.props;
           <div class="info-value editable" data-field="nombre">{obra.nombre}</div>
         </div>
         <div class="info-item">
-          <label class="info-label">Cliente</label>
-          <div class="info-value editable" data-field="cliente">{obra.cliente}</div>
-        </div>
-        <div class="info-item">
           <label class="info-label">Estado</label>
           <div class="info-value">
-            <span class={`status-badge ${obra.descripcion.toLowerCase().replace(' ', '-')}`}>
-              {obra.descripcion}
+            <span class={`status-badge ${obra.estado.toLowerCase().replace('_', '-')}`}>
+              {obra.estado === 'en_progreso' ? 'En Progreso' : 
+               obra.estado === 'planificacion' ? 'Planificación' :
+               obra.estado === 'pausada' ? 'Pausada' :
+               obra.estado === 'completada' ? 'Completada' : obra.estado}
             </span>
           </div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Responsable</label>
+          <div class="info-value editable" data-field="responsable">{obra.responsable}</div>
         </div>
       </div>
     </div>
@@ -44,29 +68,43 @@ const { obra } = Astro.props;
       <h3 class="section-title">Fechas y Plazos</h3>
       <div class="info-grid">
         <div class="info-item">
-          <label class="info-label">Días Restantes</label>
-          <div class="info-value">
-            <span class="days-remaining">15 días</span>
-          </div>
+          <label class="info-label">Fecha de Inicio</label>
+          <div class="info-value editable" data-field="fecha_inicio">{formatDate(obra.fecha_inicio)}</div>
         </div>
         <div class="info-item">
-          <label class="info-label">Progreso</label>
+          <label class="info-label">Fecha de Finalización</label>
+          <div class="info-value editable" data-field="fecha_fin">{formatDate(obra.fecha_fin)}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Días Restantes</label>
           <div class="info-value">
-            <div class="progress-container">
-            </div>
+            {daysRemaining !== null ? (
+              <span class={`days-remaining ${daysRemaining < 0 ? 'overdue' : daysRemaining <= 7 ? 'urgent' : 'normal'}`}>
+                {daysRemaining < 0 ? `${Math.abs(daysRemaining)} días atrasado` : 
+                 daysRemaining === 0 ? 'Hoy' :
+                 `${daysRemaining} días`}
+              </span>
+            ) : '-'}
           </div>
         </div>
       </div>
     </div>
 
     <div class="detail-section full-width">
-      <h3 class="section-title">Ubicación y Responsables</h3>
+      <h3 class="section-title">Ubicación</h3>
       <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Dirección</label>
+          <div class="info-value editable" data-field="ubicacion">{obra.ubicacion}</div>
+        </div>
       </div>
     </div>
 
     <div class="detail-section full-width">
       <h3 class="section-title">Descripción</h3>
+      <div class="info-item">
+        <div class="info-value editable" data-field="descripcion">{obra.descripcion || 'Sin descripción'}</div>
+      </div>
     </div>
   </div>
 </div>
@@ -120,31 +158,23 @@ const { obra } = Astro.props;
           <div class="timeline-marker"></div>
           <div class="timeline-content">
             <h5>Inicio de Obra</h5>
-            <p>15/01/2024</p>
-            <span class="timeline-status">Completado</span>
-          </div>
-        </div>
-        <div class="timeline-item completed">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <h5>Estructura Principal</h5>
-            <p>28/02/2024</p>
+            <p>{formatDate(obra.fecha_inicio)}</p>
             <span class="timeline-status">Completado</span>
           </div>
         </div>
         <div class="timeline-item active">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <h5>Elementos Secundarios</h5>
-            <p>15/03/2024</p>
+            <h5>Desarrollo del Proyecto</h5>
+            <p>En progreso</p>
             <span class="timeline-status">En Progreso</span>
           </div>
         </div>
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <h5>Acabados y Entrega</h5>
-            <p>30/03/2024</p>
+            <h5>Finalización</h5>
+            <p>{formatDate(obra.fecha_fin)}</p>
             <span class="timeline-status">Pendiente</span>
           </div>
         </div>
@@ -163,10 +193,10 @@ const { obra } = Astro.props;
         <div class="history-content">
           <div class="history-header">
             <strong>José Martínez</strong>
-            <span class="history-action">actualizó el progreso</span>
+            <span class="history-action">actualizó el estado</span>
             <span class="history-time">hace 2 horas</span>
           </div>
-          <p class="history-description">Progreso actualizado del 70% al 75%</p>
+          <p class="history-description">Estado cambiado a "En Progreso"</p>
         </div>
       </div>
       
@@ -175,22 +205,10 @@ const { obra } = Astro.props;
         <div class="history-content">
           <div class="history-header">
             <strong>María Rodríguez</strong>
-            <span class="history-action">completó conjunto</span>
-            <span class="history-time">ayer</span>
-          </div>
-          <p class="history-description">Conjunto "Estructura Principal Bloque A" marcado como completado</p>
-        </div>
-      </div>
-      
-      <div class="history-item">
-        <div class="history-avatar">AL</div>
-        <div class="history-content">
-          <div class="history-header">
-            <strong>Ana López</strong>
-            <span class="history-action">agregó comentario</span>
+            <span class="history-action">creó la obra</span>
             <span class="history-time">hace 3 días</span>
           </div>
-          <p class="history-description">Revisión de calidad completada satisfactoriamente</p>
+          <p class="history-description">Obra registrada en el sistema</p>
         </div>
       </div>
     </div>
@@ -234,101 +252,26 @@ const { obra } = Astro.props;
           </button>
         </div>
       </div>
-      
-      <div class="file-item">
-        <div class="file-icon image">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        <div class="file-details">
-          <span class="file-name">Foto_Avance_Obra.jpg</span>
-          <span class="file-meta">1.8 MB • Subido hace 2 días</span>
-        </div>
-        <div class="file-actions">
-          <button class="btn-file-action" title="Descargar">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </button>
-          <button class="btn-file-action" title="Eliminar">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>
 
 <style>
-  .detail-content {
-    min-height: 400px;
-  }
-
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-
-  .detail-section {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 20px;
-  }
-
-  .detail-section.full-width {
-    grid-column: 1 / -1;
-  }
-
-  .section-title {
-    font-size: 16px;
+  .days-remaining {
     font-weight: 600;
-    color: #111827;
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .info-grid {
-    display: grid;
-    gap: 16px;
-  }
-
-  .info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .info-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .info-value {
     font-size: 14px;
-    color: #111827;
-    font-weight: 500;
   }
 
-  .info-value.editable {
-    padding: 8px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    cursor: pointer;
+  .days-remaining.normal {
+    color: #059669;
   }
 
-  .info-value.editable:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+  .days-remaining.urgent {
+    color: #d97706;
+  }
+
+  .days-remaining.overdue {
+    color: #dc2626;
   }
 
   .status-badge {
@@ -350,354 +293,13 @@ const { obra } = Astro.props;
     color: #065f46;
   }
 
-  .days-remaining {
-    color: #f59e0b;
-    font-weight: 600;
+  .status-badge.pausada {
+    background: #fef3c7;
+    color: #92400e;
   }
 
-  .progress-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .progress-bar {
-    flex: 1;
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-
-  .progress-text {
-    font-size: 12px;
-    font-weight: 600;
-    color: #374151;
-    min-width: 32px;
-  }
-
-  /* Progress Tab Styles */
-  .progress-overview {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .progress-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-  }
-
-  .progress-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .progress-icon.completed { background: linear-gradient(135deg, #10b981, #059669); }
-  .progress-icon.in-progress { background: linear-gradient(135deg, #f59e0b, #d97706); }
-  .progress-icon.pending { background: linear-gradient(135deg, #6b7280, #4b5563); }
-
-  .progress-details {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .progress-number {
-    font-size: 20px;
-    font-weight: 700;
-    color: #111827;
-    line-height: 1;
-  }
-
-  .progress-label {
-    font-size: 12px;
-    color: #6b7280;
-    font-weight: 500;
-  }
-
-  /* Timeline Styles */
-  .timeline {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 20px;
-  }
-
-  .timeline-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 16px;
-  }
-
-  .timeline-items {
-    position: relative;
-  }
-
-  .timeline-items::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #e5e7eb;
-  }
-
-  .timeline-item {
-    position: relative;
-    padding-left: 32px;
-    margin-bottom: 24px;
-  }
-
-  .timeline-item:last-child {
-    margin-bottom: 0;
-  }
-
-  .timeline-marker {
-    position: absolute;
-    left: -8px;
-    top: 4px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #e5e7eb;
-    border: 3px solid white;
-    box-shadow: 0 0 0 1px #e5e7eb;
-  }
-
-  .timeline-item.completed .timeline-marker {
-    background: #10b981;
-    box-shadow: 0 0 0 1px #10b981;
-  }
-
-  .timeline-item.active .timeline-marker {
-    background: #f59e0b;
-    box-shadow: 0 0 0 1px #f59e0b;
-  }
-
-  .timeline-content h5 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #111827;
-    margin-bottom: 4px;
-  }
-
-  .timeline-content p {
-    font-size: 12px;
-    color: #6b7280;
-    margin-bottom: 4px;
-  }
-
-  .timeline-status {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .timeline-item.completed .timeline-status {
-    color: #10b981;
-  }
-
-  .timeline-item.active .timeline-status {
-    color: #f59e0b;
-  }
-
-  /* History Styles */
-  .history-items {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .history-item {
-    display: flex;
-    gap: 12px;
-    padding: 16px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-  }
-
-  .history-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  .history-content {
-    flex: 1;
-  }
-
-  .history-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-
-  .history-action {
-    color: #6b7280;
-    font-size: 14px;
-  }
-
-  .history-time {
-    color: #9ca3af;
-    font-size: 12px;
-    margin-left: auto;
-  }
-
-  .history-description {
-    color: #374151;
-    font-size: 14px;
-    margin: 0;
-  }
-
-  /* Files Styles */
-  .files-upload {
-    margin-bottom: 24px;
-  }
-
-  .btn-upload {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background: #f3f4f6;
-    color: #374151;
-    border: 2px dashed #d1d5db;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .btn-upload:hover {
-    background: #e5e7eb;
-    border-color: #9ca3af;
-  }
-
-  .files-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .file-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-  }
-
-  .file-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .file-icon.pdf {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-  }
-
-  .file-icon.image {
-    background: linear-gradient(135deg, #10b981, #059669);
-  }
-
-  .file-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .file-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: #111827;
-  }
-
-  .file-meta {
-    font-size: 12px;
-    color: #6b7280;
-  }
-
-  .file-actions {
-    display: flex;
-    gap: 8px;
-  }
-
-  .btn-file-action {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: #f3f4f6;
-    color: #6b7280;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .btn-file-action:hover {
+  .status-badge.planificacion {
     background: #e5e7eb;
     color: #374151;
-  }
-
-  @media (max-width: 768px) {
-    .detail-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .progress-overview {
-      grid-template-columns: 1fr;
-    }
-
-    .history-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .history-time {
-      margin-left: 0;
-    }
   }
 </style>

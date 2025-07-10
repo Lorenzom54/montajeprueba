@@ -8,6 +8,11 @@ import ObraDetail from '../detail/ObraDetail.astro';
 import { fetchObras } from '../../lib/obra_api';
 
 const obras = await fetchObras();
+
+// Calcular estadísticas dinámicas
+const obrasActivas = obras.filter(o => o.estado !== 'completada').length;
+const obrasCompletadas = obras.filter(o => o.estado === 'completada').length;
+const totalObras = obras.length;
 ---
 
 <PageHeader 
@@ -25,7 +30,7 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{obras.filter(o => o.estado !== 'completada').length}</div>
+        <div class="stat-number">{obrasActivas}</div>
         <div class="stat-label">Obras Activas</div>
       </div>
     </div>
@@ -37,8 +42,8 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{Math.round(obras.reduce((acc, obra) => acc + (obra.progreso || 0), 0) / obras.length) || 0}%</div>
-        <div class="stat-label">Promedio Progreso</div>
+        <div class="stat-number">{obras.filter(o => o.estado === 'en_progreso').length}</div>
+        <div class="stat-label">En Progreso</div>
       </div>
     </div>
     
@@ -49,7 +54,7 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{obras.filter(o => o.estado === 'completada').length}</div>
+        <div class="stat-number">{obrasCompletadas}</div>
         <div class="stat-label">Obras Completadas</div>
       </div>
     </div>
@@ -61,7 +66,7 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{obras.length}</div>
+        <div class="stat-number">{totalObras}</div>
         <div class="stat-label">Total Obras</div>
       </div>
     </div>
@@ -69,12 +74,12 @@ const obras = await fetchObras();
 
   <div class="obras-table">
     <div class="table-header">
-      <h3>Obras Recientes</h3>
+      <h3>Obras Registradas</h3>
       <div class="table-filters">
         <select class="filter-select" id="estado-filter">
           <option value="">Todas las obras</option>
           <option value="planificacion">Planificación</option>
-          <option value="enprogreso">En progreso</option>
+          <option value="en_progreso">En progreso</option>
           <option value="pausada">Pausada</option>
           <option value="completada">Completadas</option>
         </select>
@@ -82,7 +87,7 @@ const obras = await fetchObras();
           type="text" 
           class="filter-input" 
           id="search-input"
-          placeholder="Buscar por cliente..."
+          placeholder="Buscar por nombre o responsable..."
         />
       </div>
     </div>
@@ -102,14 +107,12 @@ const obras = await fetchObras();
     <ObraDetail obra={{
       id: obra.id,
       nombre: obra.nombre,
-      cliente: obra.cliente,
+      estado: obra.estado,
       fecha_inicio: obra.fecha_inicio,
       fecha_fin: obra.fecha_fin,
-      estado: obra.estado,
       ubicacion: obra.ubicacion,
       responsable: obra.responsable,
-      descripcion: obra.descripcion,
-      progreso: obra.progreso || 0
+      descripcion: obra.descripcion
     }} />
   </DetailModal>
 ))}
@@ -242,13 +245,13 @@ const obras = await fetchObras();
 
       tableRows.forEach(row => {
         const estado = row.querySelector('.status-badge').textContent.toLowerCase();
-        const cliente = row.cells[1].textContent.toLowerCase();
         const nombre = row.cells[0].textContent.toLowerCase();
+        const responsable = row.cells[5].textContent.toLowerCase();
 
-        const matchesEstado = !estadoValue || estado.includes(estadoValue);
+        const matchesEstado = !estadoValue || estado.includes(estadoValue.replace('_', ' '));
         const matchesSearch = !searchValue || 
-          cliente.includes(searchValue) || 
-          nombre.includes(searchValue);
+          nombre.includes(searchValue) || 
+          responsable.includes(searchValue);
 
         if (matchesEstado && matchesSearch) {
           row.style.display = '';

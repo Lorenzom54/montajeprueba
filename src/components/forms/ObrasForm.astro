@@ -3,7 +3,7 @@ import FormField from './FormField.astro';
 
 const estadoOptions = [
   { value: 'planificacion', label: 'Planificación' },
-  { value: 'enprogreso', label: 'En Progreso' },
+  { value: 'en_progreso', label: 'En Progreso' },
   { value: 'pausada', label: 'Pausada' },
   { value: 'completada', label: 'Completada' }
 ];
@@ -20,31 +20,24 @@ const estadoOptions = [
       />
       
       <FormField 
-        label="Cliente" 
-        name="cliente" 
-        required={true}
-        placeholder="Ej: Constructora Madrid S.L."
-      />
-      
-      <FormField 
         label="Estado" 
         name="estado" 
         type="select"
         options={estadoOptions}
         required={true}
       />
-    </div>
-    
-    <div class="form-column">
+      
       <FormField 
         label="Fecha de Inicio" 
         name="fecha_inicio" 
         type="date"
         required={true}
       />
-      
+    </div>
+    
+    <div class="form-column">
       <FormField 
-        label="Fecha de Entrega Estimada" 
+        label="Fecha de Finalización" 
         name="fecha_fin" 
         type="date"
         required={true}
@@ -56,15 +49,15 @@ const estadoOptions = [
         placeholder="Nombre del responsable"
         required={true}
       />
+      
+      <FormField 
+        label="Ubicación" 
+        name="ubicacion" 
+        placeholder="Dirección completa de la obra"
+        required={true}
+      />
     </div>
   </div>
-  
-  <FormField 
-    label="Ubicación" 
-    name="ubicacion" 
-    placeholder="Dirección completa de la obra"
-    required={true}
-  />
   
   <FormField 
     label="Descripción" 
@@ -182,7 +175,6 @@ const estadoOptions = [
 
     const body = {
       nombre: formData.get('nombre'),
-      cliente: formData.get('cliente'),
       estado: formData.get('estado'),
       fecha_inicio: formData.get('fecha_inicio'),
       fecha_fin: formData.get('fecha_fin'),

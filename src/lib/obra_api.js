@@ -33,7 +33,7 @@ export async function fetchObraById(id) {
 }
 
 // Crear nueva obra
-export async function addObra({ nombre, estado, fecha_inicio, fecha_fin, ubicacion, responsable, descripcion, cliente }) {
+export async function addObra({ nombre, estado, fecha_inicio, fecha_fin, ubicacion, responsable, descripcion }) {
   const { data, error } = await supabase
     .from('obras')
     .insert([
@@ -44,9 +44,7 @@ export async function addObra({ nombre, estado, fecha_inicio, fecha_fin, ubicaci
         fecha_fin,
         ubicacion,
         responsable,
-        descripcion,
-        cliente,
-        progreso: 0 // Inicializar progreso en 0
+        descripcion
       }
     ])
     .select()
@@ -90,22 +88,6 @@ export async function deleteObra(id) {
   return { success: true, data };
 }
 
-// Actualizar progreso de una obra
-export async function updateObraProgreso(id, progreso) {
-  const { data, error } = await supabase
-    .from('obras')
-    .update({ progreso })
-    .eq('id', id)
-    .select()
-
-  if (error) {
-    console.error('Error al actualizar progreso:', error.message);
-    return { success: false, error: error.message };
-  }
-
-  return { success: true, data: data[0] };
-}
-
 // Buscar obras por filtros
 export async function searchObras(filters = {}) {
   let query = supabase.from('obras').select('*');
@@ -114,8 +96,8 @@ export async function searchObras(filters = {}) {
     query = query.eq('estado', filters.estado);
   }
 
-  if (filters.cliente) {
-    query = query.ilike('cliente', `%${filters.cliente}%`);
+  if (filters.nombre) {
+    query = query.ilike('nombre', `%${filters.nombre}%`);
   }
 
   if (filters.responsable) {
