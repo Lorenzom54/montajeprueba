@@ -1,0 +1,457 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  type: 'obra' | 'pieza' | 'operario' | 'chapa' | 'conjunto';
+}
+
+const { id, title, type } = Astro.props;
+---
+
+<div id={id} class="modal modal-xl detail-modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">{title}</h2>
+      <div class="header-actions">
+        <button class="btn-edit" data-edit-mode="toggle">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Editar
+        </button>
+        <button class="modal-close" data-close-modal={id}>
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <div class="modal-body">
+      <div class="detail-tabs">
+        <button class="tab-button active" data-tab="general">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          General
+        </button>
+        <button class="tab-button" data-tab="progress">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          Progreso
+        </button>
+        <button class="tab-button" data-tab="history">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Historial
+        </button>
+        <button class="tab-button" data-tab="files">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Archivos
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-panel active" data-panel="general">
+          <slot name="general" />
+        </div>
+        <div class="tab-panel" data-panel="progress">
+          <slot name="progress" />
+        </div>
+        <div class="tab-panel" data-panel="history">
+          <slot name="history" />
+        </div>
+        <div class="tab-panel" data-panel="files">
+          <slot name="files" />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="footer-actions view-mode">
+        <button class="btn-secondary" data-close-modal={id}>Cerrar</button>
+        <button class="btn-primary" data-edit-mode="enable">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          Editar
+        </button>
+      </div>
+      <div class="footer-actions edit-mode" style="display: none;">
+        <button class="btn-secondary" data-edit-mode="cancel">Cancelar</button>
+        <button class="btn-primary" data-edit-mode="save">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .detail-modal .modal-container {
+    max-width: 1000px;
+    max-height: 90vh;
+    width: 100%;
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideIn 0.3s ease-out;
+    z-index: 10000;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-edit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-edit:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+
+  .modal-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .detail-tabs {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    padding: 0 24px;
+    flex-shrink: 0;
+  }
+
+  .tab-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .tab-button:hover {
+    color: #374151;
+    background: rgba(59, 130, 246, 0.05);
+  }
+
+  .tab-button.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    background: white;
+  }
+
+  .tab-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .tab-panel {
+    display: none;
+    padding: 24px;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .modal-footer {
+    padding: 24px;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+  }
+
+  .footer-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  .btn-secondary {
+    padding: 10px 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .detail-modal .modal-container {
+      max-width: none;
+      width: 100%;
+      height: 100vh;
+      max-height: none;
+      border-radius: 0;
+    }
+
+    .detail-tabs {
+      overflow-x: auto;
+      padding: 0 16px;
+    }
+
+    .tab-button {
+      white-space: nowrap;
+      padding: 12px 16px;
+    }
+
+    .tab-panel {
+      padding: 16px;
+    }
+
+    .modal-header,
+    .modal-footer {
+      padding: 16px;
+    }
+
+    .footer-actions {
+      flex-direction: column;
+    }
+  }
+
+  /* Estilos globales para los detalles */
+  :global(.detail-content) {
+    min-height: 400px;
+  }
+
+  :global(.detail-grid) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  :global(.detail-section) {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  :global(.detail-section.full-width) {
+    grid-column: 1 / -1;
+  }
+
+  :global(.section-title) {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  :global(.info-grid) {
+    display: grid;
+    gap: 16px;
+  }
+
+  :global(.info-item) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  :global(.info-label) {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  :global(.info-value) {
+    font-size: 14px;
+    color: #111827;
+    font-weight: 500;
+  }
+
+  :global(.info-value.editable) {
+    padding: 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  :global(.info-value.editable:hover) {
+    background: #f9fafb;
+    border-color: #d1d5db;
+  }
+
+  :global(.status-badge) {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  :global(.status-badge.en-progreso),
+  :global(.status-badge.en-produccion),
+  :global(.status-badge.production) {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  :global(.status-badge.completada),
+  :global(.status-badge.completado),
+  :global(.status-badge.completed) {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  :global(.status-badge.activo),
+  :global(.status-badge.active) {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  :global(.status-badge.pendiente),
+  :global(.status-badge.pending) {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  @media (max-width: 768px) {
+    :global(.detail-grid) {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

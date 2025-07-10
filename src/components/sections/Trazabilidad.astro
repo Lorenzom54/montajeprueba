@@ -1,0 +1,509 @@
+---
+import PageHeader from '../PageHeader.astro';
+---
+
+<PageHeader 
+  title="Gestión de Piezas" 
+  subtitle="Control de inventario y seguimiento de piezas individuales"
+  actionButton={{ text: "Nueva Pieza", href: "#" }}
+/>
+
+<div class="piezas-section">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon inventory">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">1,234</div>
+        <div class="stat-label">Total Piezas</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon fabrication">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">156</div>
+        <div class="stat-label">En Fabricación</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon ready">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">89</div>
+        <div class="stat-label">Listas</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon quality">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">98.5%</div>
+        <div class="stat-label">Calidad</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="piezas-table">
+    <div class="table-header">
+      <h3>Inventario de Piezas</h3>
+      <div class="table-filters">
+        <select class="filter-select">
+          <option>Todos los estados</option>
+          <option>En fabricación</option>
+          <option>Listas</option>
+          <option>Control calidad</option>
+          <option>Entregadas</option>
+        </select>
+        <select class="filter-select">
+          <option>Todos los tipos</option>
+          <option>Vigas</option>
+          <option>Columnas</option>
+          <option>Placas</option>
+          <option>Conectores</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Pieza</th>
+            <th>Tipo</th>
+            <th>Conjunto</th>
+            <th>Dimensiones</th>
+            <th>Material</th>
+            <th>Estado</th>
+            <th>Ubicación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="pieza-info">
+                <strong>Viga Principal VP-001</strong>
+                <span class="pieza-code">PZ-2024-001</span>
+              </div>
+            </td>
+            <td>
+              <div class="tipo-badge viga">
+                <span class="tipo-icon">⬜</span>
+                Viga
+              </div>
+            </td>
+            <td>Estructura Principal Bloque A</td>
+            <td>
+              <div class="dimensions">
+                <span>6000 × 300 × 200 mm</span>
+              </div>
+            </td>
+            <td>S275JR</td>
+            <td><span class="status-badge fabrication">En Fabricación</span></td>
+            <td>
+              <div class="location">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Taller A - Zona 2
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" title="Ver detalles">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="Editar">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="QR Code">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pieza-info">
+                <strong>Columna Central CC-012</strong>
+                <span class="pieza-code">PZ-2024-002</span>
+              </div>
+            </td>
+            <td>
+              <div class="tipo-badge columna">
+                <span class="tipo-icon">▬</span>
+                Columna
+              </div>
+            </td>
+            <td>Vigas Secundarias Nivel 2</td>
+            <td>
+              <div class="dimensions">
+                <span>3500 × 250 × 250 mm</span>
+              </div>
+            </td>
+            <td>S355JR</td>
+            <td><span class="status-badge ready">Lista</span></td>
+            <td>
+              <div class="location">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Almacén B - Estante 5
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" title="Ver detalles">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="Editar">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="QR Code">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pieza-info">
+                <strong>Placa Conexión PL-045</strong>
+                <span class="pieza-code">PZ-2024-003</span>
+              </div>
+            </td>
+            <td>
+              <div class="tipo-badge placa">
+                <span class="tipo-icon">◼</span>
+                Placa
+              </div>
+            </td>
+            <td>Columnas Perimetrales</td>
+            <td>
+              <div class="dimensions">
+                <span>400 × 300 × 15 mm</span>
+              </div>
+            </td>
+            <td>S275JR</td>
+            <td><span class="status-badge quality">Control Calidad</span></td>
+            <td>
+              <div class="location">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Control - Mesa 3
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" title="Ver detalles">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="Editar">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="QR Code">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  .piezas-section {
+    space-y: 32px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .stat-icon.inventory { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .stat-icon.fabrication { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .stat-icon.ready { background: linear-gradient(135deg, #10b981, #059669); }
+  .stat-icon.quality { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .piezas-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  }
+
+  .table-header {
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .table-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+
+  .table-filters {
+    display: flex;
+    gap: 12px;
+  }
+
+  .filter-select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    color: #374151;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .data-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+  }
+
+  .data-table tr:hover {
+    background: #f9fafb;
+  }
+
+  .pieza-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pieza-code {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+
+  .tipo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .tipo-badge.viga {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .tipo-badge.columna {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .tipo-badge.placa {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .tipo-icon {
+    font-size: 10px;
+  }
+
+  .dimensions {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+
+  .location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-badge.fabrication {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-badge.ready {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-badge.quality {
+    background: #ede9fe;
+    color: #6b21a8;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-icon:hover {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .table-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .table-filters {
+      flex-direction: column;
+    }
+
+    .data-table {
+      font-size: 14px;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 12px 8px;
+    }
+  }
+</style>

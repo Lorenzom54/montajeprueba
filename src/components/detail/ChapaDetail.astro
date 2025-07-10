@@ -1,0 +1,470 @@
+---
+interface Props {
+  chapa: {
+    id: string;
+    descripcion: string;
+    tipo: string;
+    grado: string;
+    proveedor: string;
+    largo: number;
+    ancho: number;
+    espesor: number;
+    pesoUnitario: number;
+    stock: number;
+    stockMinimo: number;
+    precio: number;
+    ubicacion: string;
+    fechaRecepcion: string;
+    lote: string;
+    observaciones: string;
+  };
+}
+
+const { chapa } = Astro.props;
+---
+
+<div slot="general" class="detail-content">
+  <div class="detail-grid">
+    <div class="detail-section">
+      <h3 class="section-title">Información del Material</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Descripción</label>
+          <div class="info-value editable" data-field="descripcion">{chapa.descripcion}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Tipo</label>
+          <div class="info-value">
+            <span class={`tipo-badge ${chapa.tipo.toLowerCase()}`}>
+              {chapa.tipo}
+            </span>
+          </div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Grado del Acero</label>
+          <div class="info-value">
+            <span class={`grade-badge ${chapa.grado.toLowerCase()}`}>
+              {chapa.grado}
+            </span>
+          </div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Proveedor</label>
+          <div class="info-value editable" data-field="proveedor">{chapa.proveedor}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3 class="section-title">Dimensiones y Peso</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Largo (mm)</label>
+          <div class="info-value editable" data-field="largo">{chapa.largo}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Ancho (mm)</label>
+          <div class="info-value editable" data-field="ancho">{chapa.ancho}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Espesor (mm)</label>
+          <div class="info-value editable" data-field="espesor">{chapa.espesor}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Peso Unitario (kg)</label>
+          <div class="info-value editable" data-field="pesoUnitario">{chapa.pesoUnitario}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Inventario y Precios</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Stock Actual</label>
+          <div class="info-value">
+            <span class={`stock-indicator ${chapa.stock <= chapa.stockMinimo ? 'low' : 'normal'}`}>
+              {chapa.stock} unidades
+            </span>
+          </div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Stock Mínimo</label>
+          <div class="info-value editable" data-field="stockMinimo">{chapa.stockMinimo} unidades</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Precio Unitario</label>
+          <div class="info-value editable" data-field="precio">€{chapa.precio.toFixed(2)}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Valor Total Stock</label>
+          <div class="info-value">€{(chapa.stock * chapa.precio).toLocaleString()}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Ubicación y Trazabilidad</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Ubicación</label>
+          <div class="info-value editable" data-field="ubicacion">{chapa.ubicacion}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Fecha de Recepción</label>
+          <div class="info-value editable" data-field="fechaRecepcion">{chapa.fechaRecepcion}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Número de Lote</label>
+          <div class="info-value editable" data-field="lote">{chapa.lote}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Observaciones</h3>
+      <div class="info-item">
+        <div class="info-value editable" data-field="observaciones">{chapa.observaciones}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="progress" class="detail-content">
+  <div class="progress-section">
+    <h3 class="section-title">Movimientos de Stock</h3>
+    
+    <div class="stock-overview">
+      <div class="stock-card">
+        <div class="stock-icon inbound">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+          </svg>
+        </div>
+        <div class="stock-details">
+          <span class="stock-number">156</span>
+          <span class="stock-label">Entradas (mes)</span>
+        </div>
+      </div>
+      
+      <div class="stock-card">
+        <div class="stock-icon outbound">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        <div class="stock-details">
+          <span class="stock-number">142</span>
+          <span class="stock-label">Salidas (mes)</span>
+        </div>
+      </div>
+      
+      <div class="stock-card">
+        <div class="stock-icon reserved">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <div class="stock-details">
+          <span class="stock-number">8</span>
+          <span class="stock-label">Reservadas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="movements-list">
+      <h4 class="movements-title">Últimos Movimientos</h4>
+      <div class="movements-items">
+        <div class="movement-item">
+          <div class="movement-type outbound">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </div>
+          <div class="movement-details">
+            <div class="movement-header">
+              <strong>Salida a Producción</strong>
+              <span class="movement-time">hace 2 horas</span>
+            </div>
+            <p class="movement-description">3 unidades → Taller A para Viga VP-001</p>
+          </div>
+        </div>
+        
+        <div class="movement-item">
+          <div class="movement-type inbound">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </div>
+          <div class="movement-details">
+            <div class="movement-header">
+              <strong>Recepción</strong>
+              <span class="movement-time">hace 3 días</span>
+            </div>
+            <p class="movement-description">50 unidades recibidas del proveedor</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="history" class="detail-content">
+  <div class="history-section">
+    <h3 class="section-title">Historial del Material</h3>
+    
+    <div class="history-items">
+      <div class="history-item">
+        <div class="history-avatar">AL</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>Ana López</strong>
+            <span class="history-action">retiró material</span>
+            <span class="history-time">hace 2 horas</span>
+          </div>
+          <p class="history-description">3 unidades para fabricación de Viga VP-001</p>
+        </div>
+      </div>
+      
+      <div class="history-item">
+        <div class="history-avatar">MR</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>María Rodríguez</strong>
+            <span class="history-action">actualizó ubicación</span>
+            <span class="history-time">hace 1 día</span>
+          </div>
+          <p class="history-description">Movido de Almacén A - Rack 2 a Almacén A - Rack 1</p>
+        </div>
+      </div>
+      
+      <div class="history-item">
+        <div class="history-avatar">JM</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>José Martínez</strong>
+            <span class="history-action">recibió material</span>
+            <span class="history-time">hace 3 días</span>
+          </div>
+          <p class="history-description">50 unidades del lote LOT-2024-001</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="files" class="detail-content">
+  <div class="files-section">
+    <h3 class="section-title">Certificados y Documentos</h3>
+    
+    <div class="files-upload">
+      <button class="btn-upload">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+        Subir Documento
+      </button>
+    </div>
+
+    <div class="files-list">
+      <div class="file-item">
+        <div class="file-icon pdf">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="file-details">
+          <span class="file-name">Certificado_Calidad_S275JR.pdf</span>
+          <span class="file-meta">2.1 MB • Subido hace 1 semana</span>
+        </div>
+        <div class="file-actions">
+          <button class="btn-file-action" title="Descargar">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+          <button class="btn-file-action" title="Eliminar">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .tipo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .tipo-badge.chapa {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .tipo-badge.perfil {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .tipo-badge.tubo {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .grade-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .grade-badge.s235jr {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+
+  .grade-badge.s275jr {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .grade-badge.s355jr {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .stock-indicator {
+    font-weight: 600;
+  }
+
+  .stock-indicator.low {
+    color: #dc2626;
+  }
+
+  .stock-indicator.normal {
+    color: #059669;
+  }
+
+  .stock-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stock-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
+
+  .stock-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .stock-icon.inbound { background: linear-gradient(135deg, #10b981, #059669); }
+  .stock-icon.outbound { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .stock-icon.reserved { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+  .stock-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stock-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+  }
+
+  .stock-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .movements-list {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .movements-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+
+  .movements-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .movement-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 6px;
+  }
+
+  .movement-type {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .movement-type.inbound { background: #10b981; }
+  .movement-type.outbound { background: #f59e0b; }
+
+  .movement-details {
+    flex: 1;
+  }
+
+  .movement-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .movement-time {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .movement-description {
+    font-size: 14px;
+    color: #374151;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,248 @@
+---
+import FormField from './FormField.astro';
+
+const tipoOptions = [
+  { value: 'chapa', label: 'Chapa' },
+  { value: 'perfil', label: 'Perfil' },
+  { value: 'tubo', label: 'Tubo' },
+  { value: 'barra', label: 'Barra' }
+];
+
+const gradoOptions = [
+  { value: 'S235JR', label: 'S235JR' },
+  { value: 'S275JR', label: 'S275JR' },
+  { value: 'S355JR', label: 'S355JR' },
+  { value: 'S460JR', label: 'S460JR' }
+];
+
+const proveedorOptions = [
+  { value: 'acerinox', label: 'Acerinox' },
+  { value: 'arcelormittal', label: 'ArcelorMittal' },
+  { value: 'celsa', label: 'Celsa Group' },
+  { value: 'sidenor', label: 'Sidenor' }
+];
+
+const ubicacionOptions = [
+  { value: 'almacen-a-rack-1', label: 'Almacén A - Rack 1' },
+  { value: 'almacen-a-rack-2', label: 'Almacén A - Rack 2' },
+  { value: 'almacen-b-zona-perfiles', label: 'Almacén B - Zona Perfiles' },
+  { value: 'almacen-c-estante-12', label: 'Almacén C - Estante 12' }
+];
+---
+
+<form class="chapas-form" id="chapas-form">
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Descripción del Material" 
+        name="descripcion" 
+        required={true}
+        placeholder="Ej: Chapa Estructural"
+      />
+      
+      <FormField 
+        label="Tipo" 
+        name="tipo" 
+        type="select"
+        options={tipoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Grado del Acero" 
+        name="grado" 
+        type="select"
+        options={gradoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Proveedor" 
+        name="proveedor" 
+        type="select"
+        options={proveedorOptions}
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Largo (mm)" 
+        name="largo" 
+        type="number"
+        placeholder="6000"
+        required={true}
+      />
+      
+      <FormField 
+        label="Ancho (mm)" 
+        name="ancho" 
+        type="number"
+        placeholder="2000"
+        required={true}
+      />
+      
+      <FormField 
+        label="Espesor (mm)" 
+        name="espesor" 
+        type="number"
+        placeholder="10"
+        required={true}
+      />
+      
+      <FormField 
+        label="Peso Unitario (kg)" 
+        name="peso_unitario" 
+        type="number"
+        placeholder="942"
+        required={true}
+      />
+    </div>
+  </div>
+  
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Cantidad en Stock" 
+        name="stock" 
+        type="number"
+        placeholder="24"
+        required={true}
+      />
+      
+      <FormField 
+        label="Stock Mínimo" 
+        name="stock_minimo" 
+        type="number"
+        placeholder="5"
+        required={true}
+      />
+      
+      <FormField 
+        label="Precio Unitario (€)" 
+        name="precio" 
+        type="number"
+        placeholder="450.00"
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Ubicación" 
+        name="ubicacion" 
+        type="select"
+        options={ubicacionOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Fecha de Recepción" 
+        name="fecha_recepcion" 
+        type="date"
+        required={true}
+      />
+      
+      <FormField 
+        label="Número de Lote" 
+        name="lote" 
+        placeholder="LOT-2024-001"
+      />
+    </div>
+  </div>
+  
+  <FormField 
+    label="Observaciones" 
+    name="observaciones" 
+    type="textarea"
+    rows={3}
+    placeholder="Observaciones sobre el material..."
+  />
+  
+  <div class="form-actions">
+    <button type="button" class="btn-cancel" data-close-modal="modal-nuevo-material">
+      Cancelar
+    </button>
+    <button type="submit" class="btn-submit">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      Agregar Material
+    </button>
+  </div>
+</form>
+
+<style>
+  .chapas-form {
+    max-width: none;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  .btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+</style>

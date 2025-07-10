@@ -1,0 +1,316 @@
+---
+interface Props {
+  pieza: {
+    id: string;
+    nombre: string;
+    tipo: string;
+    conjunto: string;
+    material: string;
+    largo: number;
+    ancho: number;
+    alto: number;
+    peso: number;
+    estado: string;
+    ubicacion: string;
+    fechaEntrega: string;
+    prioridad: string;
+    notas: string;
+    progreso: number;
+  };
+}
+
+const { pieza } = Astro.props;
+---
+
+<div slot="general" class="detail-content">
+  <div class="detail-grid">
+    <div class="detail-section">
+      <h3 class="section-title">Información Básica</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Nombre de la Pieza</label>
+          <div class="info-value editable" data-field="nombre">{pieza.nombre}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Tipo</label>
+          <div class="info-value editable" data-field="tipo">{pieza.tipo}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Conjunto</label>
+          <div class="info-value editable" data-field="conjunto">{pieza.conjunto}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Material</label>
+          <div class="info-value editable" data-field="material">{pieza.material}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3 class="section-title">Dimensiones y Peso</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Largo (mm)</label>
+          <div class="info-value editable" data-field="largo">{pieza.largo}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Ancho (mm)</label>
+          <div class="info-value editable" data-field="ancho">{pieza.ancho}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Alto (mm)</label>
+          <div class="info-value editable" data-field="alto">{pieza.alto}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Peso (kg)</label>
+          <div class="info-value editable" data-field="peso">{pieza.peso}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Estado y Ubicación</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Estado</label>
+          <div class="info-value">
+            <span class={`status-badge ${pieza.estado.toLowerCase().replace(' ', '-')}`}>
+              {pieza.estado}
+            </span>
+          </div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Ubicación</label>
+          <div class="info-value editable" data-field="ubicacion">{pieza.ubicacion}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Fecha de Entrega</label>
+          <div class="info-value editable" data-field="fechaEntrega">{pieza.fechaEntrega}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Prioridad</label>
+          <div class="info-value">
+            <span class={`priority-badge ${pieza.prioridad.toLowerCase()}`}>
+              {pieza.prioridad}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Notas</h3>
+      <div class="info-item">
+        <div class="info-value editable" data-field="notas">{pieza.notas}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="progress" class="detail-content">
+  <div class="progress-section">
+    <h3 class="section-title">Estado de Fabricación</h3>
+    
+    <div class="progress-overview">
+      <div class="progress-card">
+        <div class="progress-icon planning">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <div class="progress-details">
+          <span class="progress-label">Planificación</span>
+          <span class="progress-status">Completado</span>
+        </div>
+      </div>
+      
+      <div class="progress-card">
+        <div class="progress-icon fabrication">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+          </svg>
+        </div>
+        <div class="progress-details">
+          <span class="progress-label">Fabricación</span>
+          <span class="progress-status">En Proceso</span>
+        </div>
+      </div>
+      
+      <div class="progress-card">
+        <div class="progress-icon quality">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div class="progress-details">
+          <span class="progress-label">Control Calidad</span>
+          <span class="progress-status">Pendiente</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <h4 class="timeline-title">Proceso de Fabricación</h4>
+      <div class="timeline-items">
+        <div class="timeline-item completed">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h5>Corte de Material</h5>
+            <p>14/02/2024 - 09:30</p>
+            <span class="timeline-status">Completado</span>
+          </div>
+        </div>
+        <div class="timeline-item active">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h5>Soldadura</h5>
+            <p>15/02/2024 - 08:00</p>
+            <span class="timeline-status">En Progreso</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h5>Acabado</h5>
+            <p>16/02/2024 - 10:00</p>
+            <span class="timeline-status">Pendiente</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h5>Control de Calidad</h5>
+            <p>16/02/2024 - 15:00</p>
+            <span class="timeline-status">Pendiente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="history" class="detail-content">
+  <div class="history-section">
+    <h3 class="section-title">Historial de Movimientos</h3>
+    
+    <div class="history-items">
+      <div class="history-item">
+        <div class="history-avatar">JM</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>José Martínez</strong>
+            <span class="history-action">inició soldadura</span>
+            <span class="history-time">hace 1 hora</span>
+          </div>
+          <p class="history-description">Comenzó el proceso de soldadura de la viga principal</p>
+        </div>
+      </div>
+      
+      <div class="history-item">
+        <div class="history-avatar">AL</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>Ana López</strong>
+            <span class="history-action">completó corte</span>
+            <span class="history-time">ayer</span>
+          </div>
+          <p class="history-description">Finalizó el corte del material según especificaciones</p>
+        </div>
+      </div>
+      
+      <div class="history-item">
+        <div class="history-avatar">MR</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>María Rodríguez</strong>
+            <span class="history-action">movió pieza</span>
+            <span class="history-time">hace 2 días</span>
+          </div>
+          <p class="history-description">Trasladó la pieza de Almacén A a Taller A - Zona 2</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="files" class="detail-content">
+  <div class="files-section">
+    <h3 class="section-title">Planos y Documentos</h3>
+    
+    <div class="files-upload">
+      <button class="btn-upload">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+        Subir Archivo
+      </button>
+    </div>
+
+    <div class="files-list">
+      <div class="file-item">
+        <div class="file-icon pdf">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="file-details">
+          <span class="file-name">Plano_Viga_VP-001.pdf</span>
+          <span class="file-meta">1.2 MB • Subido hace 3 días</span>
+        </div>
+        <div class="file-actions">
+          <button class="btn-file-action" title="Descargar">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+          <button class="btn-file-action" title="Eliminar">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .priority-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .priority-badge.alta {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .priority-badge.media {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .priority-badge.baja {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .priority-badge.urgente {
+    background: #fecaca;
+    color: #7f1d1d;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .progress-icon.planning { background: linear-gradient(135deg, #6b7280, #4b5563); }
+  .progress-icon.fabrication { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .progress-icon.quality { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+</style>

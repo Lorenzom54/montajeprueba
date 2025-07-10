@@ -1,0 +1,699 @@
+---
+import PageHeader from '../PageHeader.astro';
+import Modal from '../Modal.astro';
+import OperariosForm from '../forms/OperariosForm.astro';
+import DetailModal from '../DetailModal.astro';
+import OperarioDetail from '../detail/OperarioDetail.astro';
+---
+
+<PageHeader 
+  title="Gestión de Operarios" 
+  subtitle="Control de personal y asignación de tareas"
+  actionButton={{ text: "Nuevo Operario", onClick: "openModal('modal-nuevo-operario')" }}
+/>
+
+<div class="operarios-section">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m9 5.197v1M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">45</div>
+        <div class="stat-label">Total Operarios</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon active">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">38</div>
+        <div class="stat-label">Activos Hoy</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon efficiency">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">94%</div>
+        <div class="stat-label">Productividad</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon hours">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">1,856</div>
+        <div class="stat-label">Horas Mes</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="operarios-table">
+    <div class="table-header">
+      <h3>Personal Activo</h3>
+      <div class="table-filters">
+        <select class="filter-select">
+          <option>Todos los estados</option>
+          <option>Activo</option>
+          <option>Descanso</option>
+          <option>Ausente</option>
+          <option>Vacaciones</option>
+        </select>
+        <select class="filter-select">
+          <option>Todas las especialidades</option>
+          <option>Soldador</option>
+          <option>Cortador</option>
+          <option>Montador</option>
+          <option>Operador</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Operario</th>
+            <th>Especialidad</th>
+            <th>Turno</th>
+            <th>Tarea Actual</th>
+            <th>Progreso</th>
+            <th>Estado</th>
+            <th>Horas Hoy</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="operario-info">
+                <div class="operario-avatar">
+                  <span>JM</span>
+                </div>
+                <div class="operario-details">
+                  <strong>José Martínez</strong>
+                  <span class="operario-id">OP-001</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="especialidad-badge soldador">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Soldador
+              </div>
+            </td>
+            <td>
+              <div class="turno-info">
+                <span class="turno-badge mañana">Mañana</span>
+                <span class="turno-hours">06:00 - 14:00</span>
+              </div>
+            </td>
+            <td>
+              <div class="tarea-info">
+                <strong>Soldadura Viga VP-001</strong>
+                <span class="tarea-obra">Centro Comercial Plaza Norte</span>
+              </div>
+            </td>
+            <td>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <span class="progress-text">75%</span>
+              </div>
+            </td>
+            <td><span class="status-badge working">Trabajando</span></td>
+            <td>
+              <div class="hours-info">
+                <span class="hours-number">6.5h</span>
+                <span class="hours-label">de 8h</span>
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" title="Ver perfil" onclick="openModal('detail-operario-001')">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="Asignar tarea">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="operario-info">
+                <div class="operario-avatar">
+                  <span>AL</span>
+                </div>
+                <div class="operario-details">
+                  <strong>Ana López</strong>
+                  <span class="operario-id">OP-002</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="especialidad-badge cortador">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-5-9V3m0 0L8 6m3-3l3 3" />
+                </svg>
+                Cortador
+              </div>
+            </td>
+            <td>
+              <div class="turno-info">
+                <span class="turno-badge mañana">Mañana</span>
+                <span class="turno-hours">06:00 - 14:00</span>
+              </div>
+            </td>
+            <td>
+              <div class="tarea-info">
+                <strong>Corte Chapas CH-S275-001</strong>
+                <span class="tarea-obra">Edificio Residencial Torres</span>
+              </div>
+            </td>
+            <td>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 45%"></div>
+                </div>
+                <span class="progress-text">45%</span>
+              </div>
+            </td>
+            <td><span class="status-badge break">Descanso</span></td>
+            <td>
+              <div class="hours-info">
+                <span class="hours-number">4.0h</span>
+                <span class="hours-label">de 8h</span>
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" title="Ver perfil" onclick="openModal('detail-operario-002')">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="Asignar tarea">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="operario-info">
+                <div class="operario-avatar">
+                  <span>CG</span>
+                </div>
+                <div class="operario-details">
+                  <strong>Carlos García</strong>
+                  <span class="operario-id">OP-003</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="especialidad-badge montador">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                Montador
+              </div>
+            </td>
+            <td>
+              <div class="turno-info">
+                <span class="turno-badge tarde">Tarde</span>
+                <span class="turno-hours">14:00 - 22:00</span>
+              </div>
+            </td>
+            <td>
+              <div class="tarea-info">
+                <strong>Montaje Estructura Bloque A</strong>
+                <span class="tarea-obra">Hospital Central</span>
+              </div>
+            </td>
+            <td>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 90%"></div>
+                </div>
+                <span class="progress-text">90%</span>
+              </div>
+            </td>
+            <td><span class="status-badge working">Trabajando</span></td>
+            <td>
+              <div class="hours-info">
+                <span class="hours-number">2.5h</span>
+                <span class="hours-label">de 8h</span>
+              </div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" title="Ver perfil" onclick="openModal('detail-operario-003')">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </button>
+                <button class="btn-icon" title="Asignar tarea">
+                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Nuevo Operario -->
+<Modal id="modal-nuevo-operario" title="Nuevo Operario" size="lg">
+  <OperariosForm />
+</Modal>
+
+<!-- Modales de Detalles -->
+<DetailModal id="detail-operario-001" title="José Martínez García" type="operario">
+  <OperarioDetail operario={{
+    id: "OP-001",
+    nombre: "José Martínez García",
+    dni: "12345678A",
+    email: "jose.martinez@empresa.com",
+    telefono: "+34 600 123 456",
+    especialidad: "Soldador",
+    turno: "Mañana (06:00 - 14:00)",
+    fechaIngreso: "15/03/2020",
+    estado: "Activo",
+    salario: 2800,
+    experiencia: 8,
+    certificaciones: "Soldadura TIG, MIG, Grúa Torre",
+    supervisor: "María Rodríguez López",
+    observaciones: "Operario experimentado con excelente rendimiento. Especialista en soldadura de estructuras complejas.",
+    horasHoy: 6.5,
+    tareaActual: "Soldadura Viga VP-001",
+    obraActual: "Centro Comercial Plaza Norte"
+  }} />
+</DetailModal>
+
+<DetailModal id="detail-operario-002" title="Ana López Fernández" type="operario">
+  <OperarioDetail operario={{
+    id: "OP-002",
+    nombre: "Ana López Fernández",
+    dni: "87654321B",
+    email: "ana.lopez@empresa.com",
+    telefono: "+34 600 987 654",
+    especialidad: "Cortador",
+    turno: "Mañana (06:00 - 14:00)",
+    fechaIngreso: "22/08/2019",
+    estado: "Activo",
+    salario: 2600,
+    experiencia: 6,
+    certificaciones: "Corte Plasma, Oxicorte, Seguridad Industrial",
+    supervisor: "Carlos García Ruiz",
+    observaciones: "Especialista en corte de precisión. Muy meticulosa en su trabajo.",
+    horasHoy: 4.0,
+    tareaActual: "Corte Chapas CH-S275-001",
+    obraActual: "Edificio Residencial Torres"
+  }} />
+</DetailModal>
+
+<DetailModal id="detail-operario-003" title="Carlos García Ruiz" type="operario">
+  <OperarioDetail operario={{
+    id: "OP-003",
+    nombre: "Carlos García Ruiz",
+    dni: "11223344C",
+    email: "carlos.garcia@empresa.com",
+    telefono: "+34 600 555 777",
+    especialidad: "Montador",
+    turno: "Tarde (14:00 - 22:00)",
+    fechaIngreso: "10/01/2018",
+    estado: "Activo",
+    salario: 3200,
+    experiencia: 12,
+    certificaciones: "Montaje Estructural, Grúa Móvil, Supervisor de Obra",
+    supervisor: "Elena Morales Castro",
+    observaciones: "Supervisor de montaje con amplia experiencia. Responsable de equipos de trabajo.",
+    horasHoy: 2.5,
+    tareaActual: "Montaje Estructura Bloque A",
+    obraActual: "Hospital Central"
+  }} />
+</DetailModal>
+
+<style>
+  .operarios-section {
+    space-y: 32px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .stat-icon.total { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .stat-icon.active { background: linear-gradient(135deg, #10b981, #059669); }
+  .stat-icon.efficiency { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .stat-icon.hours { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .operarios-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  }
+
+  .table-header {
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .table-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+
+  .table-filters {
+    display: flex;
+    gap: 12px;
+  }
+
+  .filter-select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    color: #374151;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .data-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+  }
+
+  .data-table tr:hover {
+    background: #f9fafb;
+  }
+
+  .operario-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .operario-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .operario-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .operario-id {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+
+  .especialidad-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .especialidad-badge.soldador {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .especialidad-badge.cortador {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .especialidad-badge.montador {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .turno-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .turno-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+
+  .turno-badge.mañana {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .turno-badge.tarde {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .turno-hours {
+    font-size: 11px;
+    color: #6b7280;
+  }
+
+  .tarea-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .tarea-obra {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    min-width: 32px;
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-badge.working {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-badge.break {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .hours-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hours-number {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .hours-label {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-icon:hover {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .table-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .table-filters {
+      flex-direction: column;
+    }
+
+    .data-table {
+      font-size: 14px;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 12px 8px;
+    }
+  }
+</style>

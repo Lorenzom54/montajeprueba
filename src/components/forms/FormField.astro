@@ -1,0 +1,116 @@
+---
+interface Props {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
+  value?: string;
+  options?: Array<{ value: string; label: string }>;
+  rows?: number;
+  help?: string;
+}
+
+const { 
+  label, 
+  name, 
+  type = 'text', 
+  required = false, 
+  placeholder, 
+  value = '', 
+  options,
+  rows = 3,
+  help 
+} = Astro.props;
+---
+
+<div class="form-field">
+  <label class="form-label" for={name}>
+    {label}
+    {required && <span class="required">*</span>}
+  </label>
+  
+  {type === 'select' && options ? (
+    <select class="form-input" name={name} id={name} required={required}>
+      <option value="">Seleccionar...</option>
+      {options.map(option => (
+        <option value={option.value} selected={value === option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  ) : type === 'textarea' ? (
+    <textarea 
+      class="form-input" 
+      name={name} 
+      id={name} 
+      rows={rows}
+      placeholder={placeholder}
+      required={required}
+    >{value}</textarea>
+  ) : (
+    <input 
+      class="form-input" 
+      type={type} 
+      name={name} 
+      id={name} 
+      placeholder={placeholder}
+      value={value}
+      required={required}
+    />
+  )}
+  
+  {help && <p class="form-help">{help}</p>}
+</div>
+
+<style>
+  .form-field {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+  }
+
+  .required {
+    color: #ef4444;
+    margin-left: 2px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    color: #374151;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .form-input:invalid {
+    border-color: #ef4444;
+  }
+
+  .form-help {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+
+  textarea.form-input {
+    resize: vertical;
+    min-height: 80px;
+  }
+</style>

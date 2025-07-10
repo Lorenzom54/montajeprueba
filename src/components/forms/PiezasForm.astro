@@ -1,0 +1,239 @@
+---
+import FormField from './FormField.astro';
+
+const tipoOptions = [
+  { value: 'viga', label: 'Viga' },
+  { value: 'columna', label: 'Columna' },
+  { value: 'placa', label: 'Placa' },
+  { value: 'conector', label: 'Conector' },
+  { value: 'soporte', label: 'Soporte' }
+];
+
+const materialOptions = [
+  { value: 'S235JR', label: 'S235JR' },
+  { value: 'S275JR', label: 'S275JR' },
+  { value: 'S355JR', label: 'S355JR' },
+  { value: 'S460JR', label: 'S460JR' }
+];
+
+const conjuntoOptions = [
+  { value: 'estructura-principal-a', label: 'Estructura Principal Bloque A' },
+  { value: 'vigas-secundarias-2', label: 'Vigas Secundarias Nivel 2' },
+  { value: 'columnas-perimetrales', label: 'Columnas Perimetrales' }
+];
+
+const estadoOptions = [
+  { value: 'planificada', label: 'Planificada' },
+  { value: 'en-fabricacion', label: 'En Fabricación' },
+  { value: 'control-calidad', label: 'Control de Calidad' },
+  { value: 'lista', label: 'Lista' },
+  { value: 'entregada', label: 'Entregada' }
+];
+---
+
+<form class="piezas-form" id="piezas-form">
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Nombre de la Pieza" 
+        name="nombre" 
+        required={true}
+        placeholder="Ej: Viga Principal VP-001"
+      />
+      
+      <FormField 
+        label="Tipo" 
+        name="tipo" 
+        type="select"
+        options={tipoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Conjunto" 
+        name="conjunto" 
+        type="select"
+        options={conjuntoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Material" 
+        name="material" 
+        type="select"
+        options={materialOptions}
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Largo (mm)" 
+        name="largo" 
+        type="number"
+        placeholder="6000"
+        required={true}
+      />
+      
+      <FormField 
+        label="Ancho (mm)" 
+        name="ancho" 
+        type="number"
+        placeholder="300"
+        required={true}
+      />
+      
+      <FormField 
+        label="Alto (mm)" 
+        name="alto" 
+        type="number"
+        placeholder="200"
+        required={true}
+      />
+      
+      <FormField 
+        label="Peso (kg)" 
+        name="peso" 
+        type="number"
+        placeholder="150.5"
+        required={true}
+      />
+    </div>
+  </div>
+  
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Estado" 
+        name="estado" 
+        type="select"
+        options={estadoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Ubicación" 
+        name="ubicacion" 
+        placeholder="Ej: Taller A - Zona 2"
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Fecha de Entrega" 
+        name="fecha_entrega" 
+        type="date"
+        required={true}
+      />
+      
+      <FormField 
+        label="Prioridad" 
+        name="prioridad" 
+        type="select"
+        options={[
+          { value: 'baja', label: 'Baja' },
+          { value: 'media', label: 'Media' },
+          { value: 'alta', label: 'Alta' },
+          { value: 'urgente', label: 'Urgente' }
+        ]}
+        required={true}
+      />
+    </div>
+  </div>
+  
+  <FormField 
+    label="Notas" 
+    name="notas" 
+    type="textarea"
+    rows={3}
+    placeholder="Notas adicionales sobre la pieza..."
+  />
+  
+  <div class="form-actions">
+    <button type="button" class="btn-cancel" data-close-modal="modal-nueva-pieza">
+      Cancelar
+    </button>
+    <button type="submit" class="btn-submit">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      Crear Pieza
+    </button>
+  </div>
+</form>
+
+<style>
+  .piezas-form {
+    max-width: none;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  .btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,228 @@
+---
+import FormField from './FormField.astro';
+
+const obraOptions = [
+  { value: 'centro-comercial-plaza-norte', label: 'Centro Comercial Plaza Norte' },
+  { value: 'edificio-residencial-torres', label: 'Edificio Residencial Torres' },
+  { value: 'hospital-central', label: 'Hospital Central' },
+  { value: 'ampliacion-fabrica', label: 'Ampliación Fábrica' }
+];
+
+const estadoOptions = [
+  { value: 'planificado', label: 'Planificado' },
+  { value: 'en-produccion', label: 'En Producción' },
+  { value: 'completado', label: 'Completado' },
+  { value: 'entregado', label: 'Entregado' }
+];
+
+const prioridadOptions = [
+  { value: 'baja', label: 'Baja' },
+  { value: 'media', label: 'Media' },
+  { value: 'alta', label: 'Alta' },
+  { value: 'urgente', label: 'Urgente' }
+];
+---
+
+<form class="conjuntos-form" id="conjuntos-form">
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Nombre del Conjunto" 
+        name="nombre" 
+        required={true}
+        placeholder="Ej: Estructura Principal Bloque A"
+      />
+      
+      <FormField 
+        label="Obra" 
+        name="obra" 
+        type="select"
+        options={obraOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Estado" 
+        name="estado" 
+        type="select"
+        options={estadoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Prioridad" 
+        name="prioridad" 
+        type="select"
+        options={prioridadOptions}
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Número de Piezas Estimadas" 
+        name="num_piezas" 
+        type="number"
+        placeholder="24"
+        required={true}
+      />
+      
+      <FormField 
+        label="Fecha de Inicio" 
+        name="fecha_inicio" 
+        type="date"
+        required={true}
+      />
+      
+      <FormField 
+        label="Fecha de Entrega" 
+        name="fecha_entrega" 
+        type="date"
+        required={true}
+      />
+      
+      <FormField 
+        label="Peso Total Estimado (kg)" 
+        name="peso_total" 
+        type="number"
+        placeholder="15000"
+      />
+    </div>
+  </div>
+  
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Responsable de Producción" 
+        name="responsable" 
+        placeholder="Nombre del responsable"
+        required={true}
+      />
+      
+      <FormField 
+        label="Supervisor de Calidad" 
+        name="supervisor_calidad" 
+        placeholder="Nombre del supervisor"
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Costo Estimado (€)" 
+        name="costo" 
+        type="number"
+        placeholder="25000.00"
+      />
+      
+      <FormField 
+        label="Horas de Trabajo Estimadas" 
+        name="horas_trabajo" 
+        type="number"
+        placeholder="120"
+      />
+    </div>
+  </div>
+  
+  <FormField 
+    label="Descripción" 
+    name="descripcion" 
+    type="textarea"
+    rows={4}
+    placeholder="Descripción detallada del conjunto..."
+  />
+  
+  <FormField 
+    label="Especificaciones Técnicas" 
+    name="especificaciones" 
+    type="textarea"
+    rows={3}
+    placeholder="Especificaciones técnicas y requisitos especiales..."
+  />
+  
+  <div class="form-actions">
+    <button type="button" class="btn-cancel" data-close-modal="modal-nuevo-conjunto">
+      Cancelar
+    </button>
+    <button type="submit" class="btn-submit">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      Crear Conjunto
+    </button>
+  </div>
+</form>
+
+<style>
+  .conjuntos-form {
+    max-width: none;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  .btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+</style>

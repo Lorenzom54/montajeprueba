@@ -1,0 +1,56 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+---
+
+<AdminLayout title="Trazabilidad" activeSection="trazabilidad">
+  <PageHeader 
+    title="Sistema de Trazabilidad" 
+    subtitle="Seguimiento completo de procesos y movimientos"
+    actionButton={{ text: "Generar Reporte", href: "#" }}
+  />
+
+  <div class="trazabilidad-content">
+    <div class="content-placeholder">
+      <div class="placeholder-icon">
+        <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </div>
+      <h3>Sección de Trazabilidad</h3>
+      <p>Historial completo de movimientos, cambios y procesos en el sistema.</p>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  .trazabilidad-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+  }
+
+  .content-placeholder {
+    text-align: center;
+    max-width: 400px;
+    padding: 48px 24px;
+  }
+
+  .placeholder-icon {
+    margin: 0 auto 24px;
+    color: #9ca3af;
+  }
+
+  .content-placeholder h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+  }
+
+  .content-placeholder p {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+</style>

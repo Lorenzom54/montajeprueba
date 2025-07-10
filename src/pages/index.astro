@@ -1,0 +1,146 @@
+---
+import AdminLayout from '../layouts/AdminLayout.astro';
+import ObrasSection from '../components/sections/ObrasSection.astro';
+---
+
+<AdminLayout title="Dashboard" activeSection="obras">
+  <div class="dashboard-welcome">
+    <div class="welcome-header">
+      <h1>Bienvenido al Panel de Administración</h1>
+      <p>Gestiona todos los aspectos de tu negocio desde un solo lugar</p>
+    </div>
+    
+    <div class="quick-stats">
+      <div class="stat-item">
+        <div class="stat-icon obras">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <span class="stat-number">24</span>
+          <span class="stat-label">Obras Activas</span>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-icon operarios">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m9 5.197v1M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <span class="stat-number">45</span>
+          <span class="stat-label">Operarios</span>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-icon piezas">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <span class="stat-number">1,234</span>
+          <span class="stat-label">Piezas en Stock</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ObrasSection />
+</AdminLayout>
+
+<style>
+  .dashboard-welcome {
+    margin-bottom: 48px;
+  }
+
+  .welcome-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .welcome-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+
+  .welcome-header p {
+    font-size: 18px;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .quick-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 20px 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    min-width: 180px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .stat-icon.obras { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .stat-icon.operarios { background: linear-gradient(135deg, #10b981, #059669); }
+  .stat-icon.piezas { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+  .stat-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .welcome-header h1 {
+      font-size: 24px;
+    }
+
+    .welcome-header p {
+      font-size: 16px;
+    }
+
+    .quick-stats {
+      flex-direction: column;
+    }
+
+    .stat-item {
+      min-width: auto;
+    }
+  }
+</style>

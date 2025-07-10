@@ -1,0 +1,144 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  actionButton?: {
+    text: string;
+    href?: string;
+    onClick?: string;
+  };
+}
+
+const { title, subtitle, actionButton } = Astro.props;
+---
+
+<div class="page-header">
+  <div class="header-content">
+    <div class="header-text">
+      <h1 class="page-title">{title}</h1>
+      {subtitle && <p class="page-subtitle">{subtitle}</p>}
+    </div>
+    {
+      actionButton && (
+        <div class="header-actions">
+          {actionButton.href ? (
+            <a
+              href={actionButton.href}
+              class="action-button"
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              {actionButton.text}
+            </a>
+          ) : (
+            <button class="action-button" onclick={actionButton.onClick}>
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              {actionButton.text}
+            </button>
+          )}
+        </div>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .page-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+
+  .page-subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .action-button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .page-title {
+      font-size: 24px;
+    }
+
+    .action-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

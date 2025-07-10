@@ -1,0 +1,425 @@
+---
+interface Props {
+  operario: {
+    id: string;
+    nombre: string;
+    dni: string;
+    email: string;
+    telefono: string;
+    especialidad: string;
+    turno: string;
+    fechaIngreso: string;
+    estado: string;
+    salario: number;
+    experiencia: number;
+    certificaciones: string;
+    supervisor: string;
+    observaciones: string;
+    horasHoy: number;
+    tareaActual: string;
+    obraActual: string;
+  };
+}
+
+const { operario } = Astro.props;
+---
+
+<div slot="general" class="detail-content">
+  <div class="detail-grid">
+    <div class="detail-section">
+      <h3 class="section-title">Datos Personales</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Nombre Completo</label>
+          <div class="info-value editable" data-field="nombre">{operario.nombre}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">DNI/NIE</label>
+          <div class="info-value editable" data-field="dni">{operario.dni}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Email</label>
+          <div class="info-value editable" data-field="email">{operario.email}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Teléfono</label>
+          <div class="info-value editable" data-field="telefono">{operario.telefono}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3 class="section-title">Información Laboral</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Especialidad</label>
+          <div class="info-value">
+            <span class={`especialidad-badge ${operario.especialidad.toLowerCase()}`}>
+              {operario.especialidad}
+            </span>
+          </div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Turno</label>
+          <div class="info-value editable" data-field="turno">{operario.turno}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Fecha de Ingreso</label>
+          <div class="info-value editable" data-field="fechaIngreso">{operario.fechaIngreso}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Estado</label>
+          <div class="info-value">
+            <span class={`status-badge ${operario.estado.toLowerCase()}`}>
+              {operario.estado}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Experiencia y Competencias</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Salario Base (€/mes)</label>
+          <div class="info-value editable" data-field="salario">€{operario.salario.toLocaleString()}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Años de Experiencia</label>
+          <div class="info-value editable" data-field="experiencia">{operario.experiencia} años</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Certificaciones</label>
+          <div class="info-value editable" data-field="certificaciones">{operario.certificaciones}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Supervisor Directo</label>
+          <div class="info-value editable" data-field="supervisor">{operario.supervisor}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Trabajo Actual</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Tarea Actual</label>
+          <div class="info-value">{operario.tareaActual}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Obra Asignada</label>
+          <div class="info-value">{operario.obraActual}</div>
+        </div>
+        <div class="info-item">
+          <label class="info-label">Horas Trabajadas Hoy</label>
+          <div class="info-value">{operario.horasHoy}h de 8h</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section full-width">
+      <h3 class="section-title">Observaciones</h3>
+      <div class="info-item">
+        <div class="info-value editable" data-field="observaciones">{operario.observaciones}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="progress" class="detail-content">
+  <div class="progress-section">
+    <h3 class="section-title">Rendimiento y Productividad</h3>
+    
+    <div class="performance-overview">
+      <div class="performance-card">
+        <div class="performance-icon productivity">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+        <div class="performance-details">
+          <span class="performance-number">94%</span>
+          <span class="performance-label">Productividad</span>
+        </div>
+      </div>
+      
+      <div class="performance-card">
+        <div class="performance-icon quality">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div class="performance-details">
+          <span class="performance-number">98%</span>
+          <span class="performance-label">Calidad</span>
+        </div>
+      </div>
+      
+      <div class="performance-card">
+        <div class="performance-icon attendance">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="performance-details">
+          <span class="performance-number">96%</span>
+          <span class="performance-label">Asistencia</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hours-chart">
+      <h4 class="chart-title">Horas Trabajadas - Última Semana</h4>
+      <div class="chart-bars">
+        <div class="chart-bar">
+          <div class="bar-fill" style="height: 100%"></div>
+          <span class="bar-label">L</span>
+          <span class="bar-value">8h</span>
+        </div>
+        <div class="chart-bar">
+          <div class="bar-fill" style="height: 100%"></div>
+          <span class="bar-label">M</span>
+          <span class="bar-value">8h</span>
+        </div>
+        <div class="chart-bar">
+          <div class="bar-fill" style="height: 87.5%"></div>
+          <span class="bar-label">X</span>
+          <span class="bar-value">7h</span>
+        </div>
+        <div class="chart-bar">
+          <div class="bar-fill" style="height: 100%"></div>
+          <span class="bar-label">J</span>
+          <span class="bar-value">8h</span>
+        </div>
+        <div class="chart-bar">
+          <div class="bar-fill" style="height: 75%"></div>
+          <span class="bar-label">V</span>
+          <span class="bar-value">6h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="history" class="detail-content">
+  <div class="history-section">
+    <h3 class="section-title">Historial de Actividad</h3>
+    
+    <div class="history-items">
+      <div class="history-item">
+        <div class="history-avatar">JM</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>José Martínez</strong>
+            <span class="history-action">completó tarea</span>
+            <span class="history-time">hace 2 horas</span>
+          </div>
+          <p class="history-description">Finalizó soldadura de Viga Principal VP-001</p>
+        </div>
+      </div>
+      
+      <div class="history-item">
+        <div class="history-avatar">JM</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>José Martínez</strong>
+            <span class="history-action">inició descanso</span>
+            <span class="history-time">hace 4 horas</span>
+          </div>
+          <p class="history-description">Pausa de 30 minutos</p>
+        </div>
+      </div>
+      
+      <div class="history-item">
+        <div class="history-avatar">JM</div>
+        <div class="history-content">
+          <div class="history-header">
+            <strong>José Martínez</strong>
+            <span class="history-action">fichó entrada</span>
+            <span class="history-time">hace 6 horas</span>
+          </div>
+          <p class="history-description">Inicio de jornada laboral</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div slot="files" class="detail-content">
+  <div class="files-section">
+    <h3 class="section-title">Documentos del Empleado</h3>
+    
+    <div class="files-upload">
+      <button class="btn-upload">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+        </svg>
+        Subir Documento
+      </button>
+    </div>
+
+    <div class="files-list">
+      <div class="file-item">
+        <div class="file-icon pdf">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="file-details">
+          <span class="file-name">Contrato_Trabajo.pdf</span>
+          <span class="file-meta">856 KB • Subido hace 2 meses</span>
+        </div>
+        <div class="file-actions">
+          <button class="btn-file-action" title="Descargar">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="file-item">
+        <div class="file-icon pdf">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="file-details">
+          <span class="file-name">Certificacion_Soldadura.pdf</span>
+          <span class="file-meta">1.2 MB • Subido hace 1 mes</span>
+        </div>
+        <div class="file-actions">
+          <button class="btn-file-action" title="Descargar">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .especialidad-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .especialidad-badge.soldador {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .especialidad-badge.cortador {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .especialidad-badge.montador {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .performance-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .performance-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
+
+  .performance-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .performance-icon.productivity { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .performance-icon.quality { background: linear-gradient(135deg, #10b981, #059669); }
+  .performance-icon.attendance { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+  .performance-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .performance-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+  }
+
+  .performance-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .hours-chart {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+
+  .chart-bars {
+    display: flex;
+    align-items: end;
+    gap: 12px;
+    height: 120px;
+  }
+
+  .chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bar-fill {
+    width: 100%;
+    background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+    border-radius: 4px 4px 0 0;
+    min-height: 20px;
+  }
+
+  .bar-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  .bar-value {
+    font-size: 11px;
+    color: #9ca3af;
+  }
+</style>

@@ -1,0 +1,277 @@
+---
+import PageHeader from '../PageHeader.astro';
+import Modal from '../Modal.astro';
+import ObrasForm from '../forms/ObrasForm.astro';
+import DetailModal from '../DetailModal.astro';
+import TableObra from '../table/TableObra.astro';
+import ObraDetail from '../detail/ObraDetail.astro';
+import { fetchObras } from '../../lib/obra_api';
+
+const obras = await fetchObras();
+
+// Datos de ejemplo - en una aplicación real vendrían de una API
+// const obras = [
+//   {
+//     id: "001",
+//     nombre: "Centro Comercial Plaza Norte",
+//     codigo: "OBR-2024-001",
+//     cliente: "Constructora Madrid S.L.",
+//     fechaInicio: "15/01/2024",
+//     progreso: 75,
+//     estado: "En Progreso"
+//   },
+//   {
+//     id: "002",
+//     nombre: "Edificio Residencial Torres",
+//     codigo: "OBR-2024-002",
+//     cliente: "Inmobiliaria Barcelona",
+//     fechaInicio: "03/02/2024",
+//     progreso: 45,
+//     estado: "En Progreso"
+//   },
+//   {
+//     id: "003",
+//     nombre: "Ampliación Hospital Central",
+//     codigo: "OBR-2024-003",
+//     cliente: "Consejería de Sanidad",
+//     fechaInicio: "20/03/2024",
+//     progreso: 100,
+//     estado: "Completada"
+//   }
+// ];
+---
+
+<PageHeader 
+  title="Gestión de Obras" 
+  subtitle="Administra y controla todos los proyectos y obras en curso"
+  actionButton={{ text: "Nueva Obra", onClick: "openModal('modal-nueva-obra')" }}
+/>
+
+<div class="obras-section">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon obras">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">24</div>
+        <div class="stat-label">Obras Activas</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon progress">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">87%</div>
+        <div class="stat-label">Promedio Progreso</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon completed">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">156</div>
+        <div class="stat-label">Obras Completadas</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon revenue">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">€2.4M</div>
+        <div class="stat-label">Valor Total</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="obras-table">
+    <div class="table-header">
+      <h3>Obras Recientes</h3>
+      <div class="table-filters">
+        <select class="filter-select">
+          <option>Todas las obras</option>
+          <option>En progreso</option>
+          <option>Completadas</option>
+          <option>Pendientes</option>
+        </select>
+      </div>
+    </div>
+    
+    <TableObra obras={obras} />
+  </div>
+</div>
+
+<!-- Modal para Nueva Obra -->
+<Modal id="modal-nueva-obra" title="Nueva Obra" size="lg">
+  <ObrasForm />
+</Modal>
+
+<!-- Modales de Detalles -->
+<DetailModal id="detail-obra-001" title="Centro Comercial Plaza Norte" type="obra">
+  <ObraDetail obra={{
+    id: "OBR-2024-001",
+    nombre: "Centro Comercial Plaza Norte",
+    cliente: "Constructora Madrid S.L.",
+    valor: 850000,
+    fechaInicio: "15/01/2024",
+    fechaEntrega: "30/03/2024",
+    estado: "En Progreso",
+    ubicacion: "Av. de la Constitución, 123, Madrid",
+    responsable: "José Martínez García",
+    descripcion: "Construcción de estructura metálica para centro comercial de 3 plantas con área total de 15,000 m². Incluye estructura principal, vigas secundarias y elementos de conexión.",
+    progreso: 75
+  }} />
+</DetailModal>
+
+<DetailModal id="detail-obra-002" title="Edificio Residencial Torres" type="obra">
+  <ObraDetail obra={{
+    id: "OBR-2024-002",
+    nombre: "Edificio Residencial Torres",
+    cliente: "Inmobiliaria Barcelona",
+    valor: 1200000,
+    fechaInicio: "03/02/2024",
+    fechaEntrega: "15/05/2024",
+    estado: "En Progreso",
+    ubicacion: "Passeig de Gràcia, 456, Barcelona",
+    responsable: "María Rodríguez López",
+    descripcion: "Estructura metálica para edificio residencial de 8 plantas con 24 viviendas. Incluye estructura principal, escaleras metálicas y balcones.",
+    progreso: 45
+  }} />
+</DetailModal>
+
+<DetailModal id="detail-obra-003" title="Ampliación Hospital Central" type="obra">
+  <ObraDetail obra={{
+    id: "OBR-2024-003",
+    nombre: "Ampliación Hospital Central",
+    cliente: "Consejería de Sanidad",
+    valor: 2100000,
+    fechaInicio: "20/03/2024",
+    fechaEntrega: "30/06/2024",
+    estado: "Completada",
+    ubicacion: "Calle de la Salud, 789, Valencia",
+    responsable: "Carlos García Ruiz",
+    descripcion: "Ampliación del ala este del hospital con nueva estructura metálica para 4 plantas adicionales. Proyecto de alta complejidad con requisitos especiales de seguridad.",
+    progreso: 100
+  }} />
+</DetailModal>
+
+<style>
+  .obras-section {
+    space-y: 32px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+
+  .stat-icon.obras { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+  .stat-icon.progress { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .stat-icon.completed { background: linear-gradient(135deg, #10b981, #059669); }
+  .stat-icon.revenue { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .obras-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  }
+
+  .table-header {
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .table-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+
+  .table-filters {
+    display: flex;
+    gap: 12px;
+  }
+
+  .filter-select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    color: #374151;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .table-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+  }
+</style>

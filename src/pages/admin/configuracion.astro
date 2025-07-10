@@ -1,0 +1,56 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+---
+
+<AdminLayout title="Configuración" activeSection="configuracion">
+  <PageHeader 
+    title="Configuración del Sistema" 
+    subtitle="Ajustes generales y parámetros de la aplicación"
+  />
+
+  <div class="configuracion-content">
+    <div class="content-placeholder">
+      <div class="placeholder-icon">
+        <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </div>
+      <h3>Sección de Configuración</h3>
+      <p>Personaliza y ajusta los parámetros del sistema según tus necesidades.</p>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  .configuracion-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+  }
+
+  .content-placeholder {
+    text-align: center;
+    max-width: 400px;
+    padding: 48px 24px;
+  }
+
+  .placeholder-icon {
+    margin: 0 auto 24px;
+    color: #9ca3af;
+  }
+
+  .content-placeholder h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+  }
+
+  .content-placeholder p {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+</style>

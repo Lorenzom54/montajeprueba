@@ -1,0 +1,236 @@
+---
+interface Props {
+  conjuntos: Array<{
+    id: string;
+    nombre: string;
+    codigo: string;
+    obra: string;
+    numPiezas: number;
+    estado: string;
+    progreso: number;
+    fechaEntrega: string;
+  }>;
+}
+
+const { conjuntos } = Astro.props;
+---
+
+<div class="table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Conjunto</th>
+        <th>Obra</th>
+        <th>Piezas</th>
+        <th>Estado</th>
+        <th>Progreso</th>
+        <th>Fecha Entrega</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {conjuntos.map((conjunto) => (
+        <tr>
+          <td>
+            <div class="conjunto-info">
+              <strong>{conjunto.nombre}</strong>
+              <span class="conjunto-code">{conjunto.codigo}</span>
+            </div>
+          </td>
+          <td>{conjunto.obra}</td>
+          <td>
+            <div class="piezas-count">
+              <span class="count-number">{conjunto.numPiezas}</span>
+              <span class="count-label">piezas</span>
+            </div>
+          </td>
+          <td>
+            <span class={`status-badge ${conjunto.estado.toLowerCase().replace(' ', '-')}`}>
+              {conjunto.estado}
+            </span>
+          </td>
+          <td>
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" style={`width: ${conjunto.progreso}%`}></div>
+              </div>
+              <span class="progress-text">{conjunto.progreso}%</span>
+            </div>
+          </td>
+          <td>{conjunto.fechaEntrega}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" title="Ver detalles" onclick={`openModal('detail-conjunto-${conjunto.id}')`}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+              <button class="btn-icon" title="Editar">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .data-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+  }
+
+  .data-table tr:hover {
+    background: #f9fafb;
+  }
+
+  .conjunto-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .conjunto-code {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+
+  .piezas-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .count-number {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .count-label {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .progress-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-fill.completed {
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+
+  .progress-fill.pending {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+  }
+
+  .progress-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    min-width: 32px;
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .status-badge.en-produccion {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-badge.completado {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-badge.pendiente {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-icon:hover {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  @media (max-width: 768px) {
+    .data-table {
+      font-size: 14px;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 12px 8px;
+    }
+  }
+</style>

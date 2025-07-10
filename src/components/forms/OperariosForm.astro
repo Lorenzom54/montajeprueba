@@ -1,0 +1,222 @@
+---
+import FormField from './FormField.astro';
+
+const especialidadOptions = [
+  { value: 'soldador', label: 'Soldador' },
+  { value: 'cortador', label: 'Cortador' },
+  { value: 'montador', label: 'Montador' },
+  { value: 'operador', label: 'Operador' },
+  { value: 'supervisor', label: 'Supervisor' }
+];
+
+const turnoOptions = [
+  { value: 'mañana', label: 'Mañana (06:00 - 14:00)' },
+  { value: 'tarde', label: 'Tarde (14:00 - 22:00)' },
+  { value: 'noche', label: 'Noche (22:00 - 06:00)' }
+];
+
+const estadoOptions = [
+  { value: 'activo', label: 'Activo' },
+  { value: 'inactivo', label: 'Inactivo' },
+  { value: 'vacaciones', label: 'Vacaciones' },
+  { value: 'baja', label: 'Baja Médica' }
+];
+---
+
+<form class="operarios-form" id="operarios-form">
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Nombre Completo" 
+        name="nombre" 
+        required={true}
+        placeholder="Ej: José Martínez García"
+      />
+      
+      <FormField 
+        label="DNI/NIE" 
+        name="dni" 
+        required={true}
+        placeholder="12345678A"
+      />
+      
+      <FormField 
+        label="Email" 
+        name="email" 
+        type="email"
+        placeholder="jose.martinez@empresa.com"
+        required={true}
+      />
+      
+      <FormField 
+        label="Teléfono" 
+        name="telefono" 
+        type="tel"
+        placeholder="+34 600 123 456"
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Especialidad" 
+        name="especialidad" 
+        type="select"
+        options={especialidadOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Turno Preferido" 
+        name="turno" 
+        type="select"
+        options={turnoOptions}
+        required={true}
+      />
+      
+      <FormField 
+        label="Fecha de Ingreso" 
+        name="fecha_ingreso" 
+        type="date"
+        required={true}
+      />
+      
+      <FormField 
+        label="Estado" 
+        name="estado" 
+        type="select"
+        options={estadoOptions}
+        required={true}
+      />
+    </div>
+  </div>
+  
+  <div class="form-grid">
+    <div class="form-column">
+      <FormField 
+        label="Salario Base (€/mes)" 
+        name="salario" 
+        type="number"
+        placeholder="2500.00"
+        required={true}
+      />
+      
+      <FormField 
+        label="Años de Experiencia" 
+        name="experiencia" 
+        type="number"
+        placeholder="5"
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
+        label="Certificaciones" 
+        name="certificaciones" 
+        placeholder="Ej: Soldadura TIG, Grúa Torre..."
+      />
+      
+      <FormField 
+        label="Supervisor Directo" 
+        name="supervisor" 
+        placeholder="Nombre del supervisor"
+      />
+    </div>
+  </div>
+  
+  <FormField 
+    label="Observaciones" 
+    name="observaciones" 
+    type="textarea"
+    rows={3}
+    placeholder="Observaciones adicionales sobre el operario..."
+  />
+  
+  <div class="form-actions">
+    <button type="button" class="btn-cancel" data-close-modal="modal-nuevo-operario">
+      Cancelar
+    </button>
+    <button type="submit" class="btn-submit">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      Crear Operario
+    </button>
+  </div>
+</form>
+
+<style>
+  .operarios-form {
+    max-width: none;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #374151;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  .btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+</style>
