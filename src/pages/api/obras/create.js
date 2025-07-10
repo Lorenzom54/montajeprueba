@@ -6,20 +6,39 @@ export async function POST({ request }) {
   try {
     const body = await request.json();
 
-    const { nombre, estado, fecha_inicio, fecha_fin, ubicacion, responsable, descripcion } = body;
+    const { nombre, estado, fecha_inicio, fecha_fin, ubicacion, responsable, descripcion, cliente } = body;
 
-    const data = await addObra({
+    // Validaciones básicas
+    if (!nombre || !estado || !fecha_inicio || !cliente) {
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Los campos nombre, estado, fecha de inicio y cliente son obligatorios' 
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const result = await addObra({
       nombre,
       estado,
       fecha_inicio,
       fecha_fin,
       ubicacion,
       responsable,
-      descripcion
+      descripcion,
+      cliente
     });
 
-    return new Response(JSON.stringify({ success: true, data }), {
-      status: 200,
+    if (!result.success) {
+      return new Response(JSON.stringify(result), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify(result), {
+      status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
 

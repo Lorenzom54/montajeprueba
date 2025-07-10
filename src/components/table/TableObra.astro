@@ -3,10 +3,10 @@ interface Props {
   obras: Array<{
     id: string;
     nombre: string;
-    codigo: string;
+    codigo?: string;
     cliente: string;
     fecha_inicio: string;
-    progreso: number;
+    progreso?: number;
     estado: string;
   }>;
 }
@@ -32,23 +32,23 @@ const { obras } = Astro.props;
           <td>
             <div class="obra-info">
               <strong>{obra.nombre}</strong>
-              <span class="obra-code">{obra.codigo}</span>
+              {obra.codigo && <span class="obra-code">{obra.codigo}</span>}
             </div>
           </td>
           <td>{obra.cliente}</td>
-          <td>{obra.fecha_inicio}</td>
+          <td>{new Date(obra.fecha_inicio).toLocaleDateString('es-ES')}</td>
           <td>
             <div class="progress-container">
               <div class="progress-bar">
-                <div class={`progress-fill ${obra.progreso === 100 ? 'completed' : ''}`} style={`width: ${obra.progreso}%`}></div>
+                <div class={`progress-fill ${(obra.progreso || 0) === 100 ? 'completed' : ''}`} style={`width: ${obra.progreso || 0}%`}></div>
               </div>
-              <span class="progress-text">{obra.progreso}%</span>
+              <span class="progress-text">{obra.progreso || 0}%</span>
             </div>
           </td>
           <td>
-            {/* <span class={`status-badge ${obra.estado.toLowerCase().replace(' ', '-')}`}>
+            <span class={`status-badge ${obra.estado.toLowerCase().replace(' ', '-')}`}>
               {obra.estado}
-            </span> */}
+            </span>
           </td>
           <td>
             <div class="action-buttons">
@@ -58,9 +58,14 @@ const { obras } = Astro.props;
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
               </button>
-              <button class="btn-icon" title="Editar">
+              <button class="btn-icon" title="Editar" onclick={`editObra('${obra.id}')`}>
                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button class="btn-icon btn-delete" title="Eliminar" onclick={`deleteObra('${obra.id}', '${obra.nombre}')`}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
             </div>
@@ -156,7 +161,7 @@ const { obras } = Astro.props;
     letter-spacing: 0.05em;
   }
 
-  .status-badge.en-progreso {
+  .status-badge.enprogreso {
     background: #dbeafe;
     color: #1d4ed8;
   }
@@ -200,6 +205,11 @@ const { obras } = Astro.props;
     color: #374151;
   }
 
+  .btn-delete:hover {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
   @media (max-width: 768px) {
     .data-table {
       font-size: 14px;
@@ -211,3 +221,187 @@ const { obras } = Astro.props;
     }
   }
 </style>
+
+<script type="module">
+  // Función para editar obra
+  window.editObra = async function(obraId) {
+    try {
+      const response = await fetch(`/api/obras/${obraId}`);
+      const result = await response.json();
+      
+      if (result.success) {
+        const obra = result.data;
+        
+        // Llenar el formulario con los datos existentes
+        const form = document.getElementById('obras-form');
+        if (form) {
+          form.querySelector('[name="nombre"]').value = obra.nombre || '';
+          form.querySelector('[name="cliente"]').value = obra.cliente || '';
+          form.querySelector('[name="estado"]').value = obra.estado || '';
+          form.querySelector('[name="fecha_inicio"]').value = obra.fecha_inicio || '';
+          form.querySelector('[name="fecha_fin"]').value = obra.fecha_fin || '';
+          form.querySelector('[name="ubicacion"]').value = obra.ubicacion || '';
+          form.querySelector('[name="responsable"]').value = obra.responsable || '';
+          form.querySelector('[name="descripcion"]').value = obra.descripcion || '';
+          
+          // Cambiar el comportamiento del formulario para actualizar
+          form.setAttribute('data-edit-id', obraId);
+          form.querySelector('.btn-submit').innerHTML = `
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Actualizar Obra
+          `;
+          
+          // Cambiar el título del modal
+          const modal = document.getElementById('modal-nueva-obra');
+          const title = modal.querySelector('.modal-title');
+          if (title) {
+            title.textContent = 'Editar Obra';
+          }
+          
+          // Abrir el modal
+          openModal('modal-nueva-obra');
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar obra para editar:', error);
+      alert('Error al cargar los datos de la obra');
+    }
+  };
+
+  // Función para eliminar obra
+  window.deleteObra = async function(obraId, obraNombre) {
+    if (confirm(`¿Estás seguro de que quieres eliminar la obra "${obraNombre}"? Esta acción no se puede deshacer.`)) {
+      try {
+        const response = await fetch(`/api/obras/${obraId}`, {
+          method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Obra eliminada correctamente');
+          location.reload();
+        } else {
+          throw new Error(result.error || 'Error al eliminar la obra');
+        }
+      } catch (error) {
+        console.error('Error al eliminar obra:', error);
+        alert('Error al eliminar la obra: ' + error.message);
+      }
+    }
+  };
+
+  // Modificar el comportamiento del formulario para manejar edición
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('obras-form');
+    if (form) {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const editId = form.getAttribute('data-edit-id');
+        const isEditing = !!editId;
+        
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('.btn-submit');
+        
+        // Deshabilitar botón durante el envío
+        submitButton.disabled = true;
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = `
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="animate-spin">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          ${isEditing ? 'Actualizando...' : 'Creando...'}
+        `;
+
+        const body = {
+          nombre: formData.get('nombre'),
+          cliente: formData.get('cliente'),
+          estado: formData.get('estado'),
+          fecha_inicio: formData.get('fecha_inicio'),
+          fecha_fin: formData.get('fecha_fin'),
+          ubicacion: formData.get('ubicacion'),
+          responsable: formData.get('responsable'),
+          descripcion: formData.get('descripcion'),
+        };
+
+        try {
+          const url = isEditing ? `/api/obras/${editId}` : '/api/obras/create';
+          const method = isEditing ? 'PUT' : 'POST';
+          
+          const res = await fetch(url, {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          });
+
+          const json = await res.json();
+          
+          if (json.success) {
+            // Mostrar éxito
+            submitButton.innerHTML = `
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              ${isEditing ? '¡Obra actualizada!' : '¡Obra creada!'}
+            `;
+            submitButton.style.background = '#10b981';
+            
+            // Recargar la página después de un breve delay
+            setTimeout(() => {
+              location.reload();
+            }, 1500);
+          } else {
+            throw new Error(json.error || `Error al ${isEditing ? 'actualizar' : 'crear'} la obra`);
+          }
+        } catch (error) {
+          console.error(`Error al ${isEditing ? 'actualizar' : 'crear'} obra:`, error);
+          
+          // Mostrar error
+          submitButton.innerHTML = `
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Error al ${isEditing ? 'actualizar' : 'crear'}
+          `;
+          submitButton.style.background = '#ef4444';
+          
+          // Restaurar botón después de un delay
+          setTimeout(() => {
+            submitButton.innerHTML = originalText;
+            submitButton.style.background = '';
+            submitButton.disabled = false;
+          }, 2000);
+        }
+      });
+    }
+  });
+
+  // Limpiar formulario cuando se cierra el modal
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('[data-close-modal="modal-nueva-obra"]')) {
+      const form = document.getElementById('obras-form');
+      if (form) {
+        form.reset();
+        form.removeAttribute('data-edit-id');
+        form.querySelector('.btn-submit').innerHTML = `
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          Crear Obra
+        `;
+        
+        // Restaurar título del modal
+        const modal = document.getElementById('modal-nueva-obra');
+        const title = modal.querySelector('.modal-title');
+        if (title) {
+          title.textContent = 'Nueva Obra';
+        }
+      }
+    }
+  });
+</script>

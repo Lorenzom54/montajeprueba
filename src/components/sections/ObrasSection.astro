@@ -8,37 +8,6 @@ import ObraDetail from '../detail/ObraDetail.astro';
 import { fetchObras } from '../../lib/obra_api';
 
 const obras = await fetchObras();
-
-// Datos de ejemplo - en una aplicación real vendrían de una API
-// const obras = [
-//   {
-//     id: "001",
-//     nombre: "Centro Comercial Plaza Norte",
-//     codigo: "OBR-2024-001",
-//     cliente: "Constructora Madrid S.L.",
-//     fechaInicio: "15/01/2024",
-//     progreso: 75,
-//     estado: "En Progreso"
-//   },
-//   {
-//     id: "002",
-//     nombre: "Edificio Residencial Torres",
-//     codigo: "OBR-2024-002",
-//     cliente: "Inmobiliaria Barcelona",
-//     fechaInicio: "03/02/2024",
-//     progreso: 45,
-//     estado: "En Progreso"
-//   },
-//   {
-//     id: "003",
-//     nombre: "Ampliación Hospital Central",
-//     codigo: "OBR-2024-003",
-//     cliente: "Consejería de Sanidad",
-//     fechaInicio: "20/03/2024",
-//     progreso: 100,
-//     estado: "Completada"
-//   }
-// ];
 ---
 
 <PageHeader 
@@ -56,7 +25,7 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">24</div>
+        <div class="stat-number">{obras.filter(o => o.estado !== 'completada').length}</div>
         <div class="stat-label">Obras Activas</div>
       </div>
     </div>
@@ -68,7 +37,7 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">87%</div>
+        <div class="stat-number">{Math.round(obras.reduce((acc, obra) => acc + (obra.progreso || 0), 0) / obras.length) || 0}%</div>
         <div class="stat-label">Promedio Progreso</div>
       </div>
     </div>
@@ -80,7 +49,7 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">156</div>
+        <div class="stat-number">{obras.filter(o => o.estado === 'completada').length}</div>
         <div class="stat-label">Obras Completadas</div>
       </div>
     </div>
@@ -92,8 +61,8 @@ const obras = await fetchObras();
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">€2.4M</div>
-        <div class="stat-label">Valor Total</div>
+        <div class="stat-number">{obras.length}</div>
+        <div class="stat-label">Total Obras</div>
       </div>
     </div>
   </div>
@@ -102,12 +71,19 @@ const obras = await fetchObras();
     <div class="table-header">
       <h3>Obras Recientes</h3>
       <div class="table-filters">
-        <select class="filter-select">
-          <option>Todas las obras</option>
-          <option>En progreso</option>
-          <option>Completadas</option>
-          <option>Pendientes</option>
+        <select class="filter-select" id="estado-filter">
+          <option value="">Todas las obras</option>
+          <option value="planificacion">Planificación</option>
+          <option value="enprogreso">En progreso</option>
+          <option value="pausada">Pausada</option>
+          <option value="completada">Completadas</option>
         </select>
+        <input 
+          type="text" 
+          class="filter-input" 
+          id="search-input"
+          placeholder="Buscar por cliente..."
+        />
       </div>
     </div>
     
@@ -120,54 +96,23 @@ const obras = await fetchObras();
   <ObrasForm />
 </Modal>
 
-<!-- Modales de Detalles -->
-<DetailModal id="detail-obra-001" title="Centro Comercial Plaza Norte" type="obra">
-  <ObraDetail obra={{
-    id: "OBR-2024-001",
-    nombre: "Centro Comercial Plaza Norte",
-    cliente: "Constructora Madrid S.L.",
-    valor: 850000,
-    fechaInicio: "15/01/2024",
-    fechaEntrega: "30/03/2024",
-    estado: "En Progreso",
-    ubicacion: "Av. de la Constitución, 123, Madrid",
-    responsable: "José Martínez García",
-    descripcion: "Construcción de estructura metálica para centro comercial de 3 plantas con área total de 15,000 m². Incluye estructura principal, vigas secundarias y elementos de conexión.",
-    progreso: 75
-  }} />
-</DetailModal>
-
-<DetailModal id="detail-obra-002" title="Edificio Residencial Torres" type="obra">
-  <ObraDetail obra={{
-    id: "OBR-2024-002",
-    nombre: "Edificio Residencial Torres",
-    cliente: "Inmobiliaria Barcelona",
-    valor: 1200000,
-    fechaInicio: "03/02/2024",
-    fechaEntrega: "15/05/2024",
-    estado: "En Progreso",
-    ubicacion: "Passeig de Gràcia, 456, Barcelona",
-    responsable: "María Rodríguez López",
-    descripcion: "Estructura metálica para edificio residencial de 8 plantas con 24 viviendas. Incluye estructura principal, escaleras metálicas y balcones.",
-    progreso: 45
-  }} />
-</DetailModal>
-
-<DetailModal id="detail-obra-003" title="Ampliación Hospital Central" type="obra">
-  <ObraDetail obra={{
-    id: "OBR-2024-003",
-    nombre: "Ampliación Hospital Central",
-    cliente: "Consejería de Sanidad",
-    valor: 2100000,
-    fechaInicio: "20/03/2024",
-    fechaEntrega: "30/06/2024",
-    estado: "Completada",
-    ubicacion: "Calle de la Salud, 789, Valencia",
-    responsable: "Carlos García Ruiz",
-    descripcion: "Ampliación del ala este del hospital con nueva estructura metálica para 4 plantas adicionales. Proyecto de alta complejidad con requisitos especiales de seguridad.",
-    progreso: 100
-  }} />
-</DetailModal>
+<!-- Modales de Detalles dinámicos -->
+{obras.map((obra) => (
+  <DetailModal id={`detail-obra-${obra.id}`} title={obra.nombre} type="obra">
+    <ObraDetail obra={{
+      id: obra.id,
+      nombre: obra.nombre,
+      cliente: obra.cliente,
+      fecha_inicio: obra.fecha_inicio,
+      fecha_fin: obra.fecha_fin,
+      estado: obra.estado,
+      ubicacion: obra.ubicacion,
+      responsable: obra.responsable,
+      descripcion: obra.descripcion,
+      progreso: obra.progreso || 0
+    }} />
+  </DetailModal>
+))}
 
 <style>
   .obras-section {
@@ -254,13 +199,17 @@ const obras = await fetchObras();
     gap: 12px;
   }
 
-  .filter-select {
+  .filter-select, .filter-input {
     padding: 8px 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 14px;
     background: white;
     color: #374151;
+  }
+
+  .filter-input {
+    min-width: 200px;
   }
 
   @media (max-width: 768px) {
@@ -273,5 +222,43 @@ const obras = await fetchObras();
       align-items: stretch;
       gap: 12px;
     }
+
+    .table-filters {
+      flex-direction: column;
+    }
   }
 </style>
+
+<script type="module">
+  // Filtros en tiempo real
+  document.addEventListener('DOMContentLoaded', function() {
+    const estadoFilter = document.getElementById('estado-filter');
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+
+    function filterTable() {
+      const estadoValue = estadoFilter.value.toLowerCase();
+      const searchValue = searchInput.value.toLowerCase();
+
+      tableRows.forEach(row => {
+        const estado = row.querySelector('.status-badge').textContent.toLowerCase();
+        const cliente = row.cells[1].textContent.toLowerCase();
+        const nombre = row.cells[0].textContent.toLowerCase();
+
+        const matchesEstado = !estadoValue || estado.includes(estadoValue);
+        const matchesSearch = !searchValue || 
+          cliente.includes(searchValue) || 
+          nombre.includes(searchValue);
+
+        if (matchesEstado && matchesSearch) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    estadoFilter.addEventListener('change', filterTable);
+    searchInput.addEventListener('input', filterTable);
+  });
+</script>

@@ -1,7 +1,6 @@
 ---
 import FormField from './FormField.astro';
 
-
 const estadoOptions = [
   { value: 'planificacion', label: 'Planificación' },
   { value: 'enprogreso', label: 'En Progreso' },
@@ -21,6 +20,23 @@ const estadoOptions = [
       />
       
       <FormField 
+        label="Cliente" 
+        name="cliente" 
+        required={true}
+        placeholder="Ej: Constructora Madrid S.L."
+      />
+      
+      <FormField 
+        label="Estado" 
+        name="estado" 
+        type="select"
+        options={estadoOptions}
+        required={true}
+      />
+    </div>
+    
+    <div class="form-column">
+      <FormField 
         label="Fecha de Inicio" 
         name="fecha_inicio" 
         type="date"
@@ -33,23 +49,6 @@ const estadoOptions = [
         type="date"
         required={true}
       />
-    </div>
-    
-    <div class="form-column">
-      <FormField 
-        label="Estado" 
-        name="estado" 
-        type="select"
-        options={estadoOptions}
-        required={true}
-      />
-      
-      <FormField 
-        label="Ubicación" 
-        name="ubicacion" 
-        placeholder="Dirección completa de la obra"
-        required={true}
-      />
       
       <FormField 
         label="Responsable del Proyecto" 
@@ -59,6 +58,13 @@ const estadoOptions = [
       />
     </div>
   </div>
+  
+  <FormField 
+    label="Ubicación" 
+    name="ubicacion" 
+    placeholder="Dirección completa de la obra"
+    required={true}
+  />
   
   <FormField 
     label="Descripción" 
@@ -162,31 +168,75 @@ const estadoOptions = [
 
     const form = e.target;
     const formData = new FormData(form);
+    const submitButton = form.querySelector('.btn-submit');
+    
+    // Deshabilitar botón durante el envío
+    submitButton.disabled = true;
+    const originalText = submitButton.innerHTML;
+    submitButton.innerHTML = `
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="animate-spin">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Creando...
+    `;
 
     const body = {
       nombre: formData.get('nombre'),
+      cliente: formData.get('cliente'),
       estado: formData.get('estado'),
       fecha_inicio: formData.get('fecha_inicio'),
-      fecha_fin: formData.get('fecha_fin'), // Asegúrate del nombre correcto
+      fecha_fin: formData.get('fecha_fin'),
       ubicacion: formData.get('ubicacion'),
       responsable: formData.get('responsable'),
       descripcion: formData.get('descripcion'),
     };
 
-    const res = await fetch('/api/obras/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
+    try {
+      const res = await fetch('/api/obras/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
 
-    const json = await res.json();
-    if (json.success) {
-      console.log('Obra creada con éxito');
-      location.reload(); // o cerrar modal, etc.
-    } else {
-      console.error('Error al crear obra:', json.error);
+      const json = await res.json();
+      
+      if (json.success) {
+        // Mostrar éxito
+        submitButton.innerHTML = `
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          ¡Obra creada!
+        `;
+        submitButton.style.background = '#10b981';
+        
+        // Recargar la página después de un breve delay
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+      } else {
+        throw new Error(json.error || 'Error al crear la obra');
+      }
+    } catch (error) {
+      console.error('Error al crear obra:', error);
+      
+      // Mostrar error
+      submitButton.innerHTML = `
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Error al crear
+      `;
+      submitButton.style.background = '#ef4444';
+      
+      // Restaurar botón después de un delay
+      setTimeout(() => {
+        submitButton.innerHTML = originalText;
+        submitButton.style.background = '';
+        submitButton.disabled = false;
+      }, 2000);
     }
   });
 </script>
