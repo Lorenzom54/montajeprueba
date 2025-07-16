@@ -1,32 +1,12 @@
 ---
 import FormField from './FormField.astro';
 
-const tipoOptions = [
-  { value: 'chapa', label: 'Chapa' },
-  { value: 'perfil', label: 'Perfil' },
-  { value: 'tubo', label: 'Tubo' },
-  { value: 'barra', label: 'Barra' }
-];
-
-const gradoOptions = [
+const tipoAceroOptions = [
   { value: 'S235JR', label: 'S235JR' },
   { value: 'S275JR', label: 'S275JR' },
   { value: 'S355JR', label: 'S355JR' },
-  { value: 'S460JR', label: 'S460JR' }
-];
-
-const proveedorOptions = [
-  { value: 'acerinox', label: 'Acerinox' },
-  { value: 'arcelormittal', label: 'ArcelorMittal' },
-  { value: 'celsa', label: 'Celsa Group' },
-  { value: 'sidenor', label: 'Sidenor' }
-];
-
-const ubicacionOptions = [
-  { value: 'almacen-a-rack-1', label: 'Almacén A - Rack 1' },
-  { value: 'almacen-a-rack-2', label: 'Almacén A - Rack 2' },
-  { value: 'almacen-b-zona-perfiles', label: 'Almacén B - Zona Perfiles' },
-  { value: 'almacen-c-estante-12', label: 'Almacén C - Estante 12' }
+  { value: 'S460JR', label: 'S460JR' },
+  { value: 'S690QL', label: 'S690QL' }
 ];
 ---
 
@@ -34,140 +14,51 @@ const ubicacionOptions = [
   <div class="form-grid">
     <div class="form-column">
       <FormField 
-        label="Descripción del Material" 
-        name="descripcion" 
+        label="Código de la Chapa" 
+        name="codigo" 
         required={true}
-        placeholder="Ej: Chapa Estructural"
+        placeholder="Ej: CH-001"
       />
       
       <FormField 
-        label="Tipo" 
-        name="tipo" 
-        type="select"
-        options={tipoOptions}
-        required={true}
+        label="Colada" 
+        name="colada" 
+        placeholder="Ej: COL-2024-001"
       />
       
       <FormField 
-        label="Grado del Acero" 
-        name="grado" 
-        type="select"
-        options={gradoOptions}
-        required={true}
-      />
-      
-      <FormField 
-        label="Proveedor" 
-        name="proveedor" 
-        type="select"
-        options={proveedorOptions}
-        required={true}
-      />
-    </div>
-    
-    <div class="form-column">
-      <FormField 
-        label="Largo (mm)" 
-        name="largo" 
-        type="number"
-        placeholder="6000"
-        required={true}
-      />
-      
-      <FormField 
-        label="Ancho (mm)" 
-        name="ancho" 
-        type="number"
-        placeholder="2000"
-        required={true}
-      />
-      
-      <FormField 
-        label="Espesor (mm)" 
+        label="Espesor" 
         name="espesor" 
-        type="number"
-        placeholder="10"
-        required={true}
-      />
-      
-      <FormField 
-        label="Peso Unitario (kg)" 
-        name="peso_unitario" 
-        type="number"
-        placeholder="942"
-        required={true}
-      />
-    </div>
-  </div>
-  
-  <div class="form-grid">
-    <div class="form-column">
-      <FormField 
-        label="Cantidad en Stock" 
-        name="stock" 
-        type="number"
-        placeholder="24"
-        required={true}
-      />
-      
-      <FormField 
-        label="Stock Mínimo" 
-        name="stock_minimo" 
-        type="number"
-        placeholder="5"
-        required={true}
-      />
-      
-      <FormField 
-        label="Precio Unitario (€)" 
-        name="precio" 
-        type="number"
-        placeholder="450.00"
-        required={true}
+        placeholder="Ej: 10mm"
       />
     </div>
     
     <div class="form-column">
       <FormField 
-        label="Ubicación" 
-        name="ubicacion" 
+        label="Dimensiones" 
+        name="dimensiones" 
+        placeholder="Ej: 6000x2000mm"
+      />
+      
+      <FormField 
+        label="Tipo de Acero" 
+        name="tipo_acero" 
         type="select"
-        options={ubicacionOptions}
+        options={tipoAceroOptions}
         required={true}
-      />
-      
-      <FormField 
-        label="Fecha de Recepción" 
-        name="fecha_recepcion" 
-        type="date"
-        required={true}
-      />
-      
-      <FormField 
-        label="Número de Lote" 
-        name="lote" 
-        placeholder="LOT-2024-001"
       />
     </div>
   </div>
-  
-  <FormField 
-    label="Observaciones" 
-    name="observaciones" 
-    type="textarea"
-    rows={3}
-    placeholder="Observaciones sobre el material..."
-  />
   
   <div class="form-actions">
-    <button type="button" class="btn-cancel" data-close-modal="modal-nuevo-material">
+    <button type="button" class="btn-cancel" data-close-modal="modal-nueva-chapa">
       Cancelar
     </button>
     <button type="submit" class="btn-submit">
       <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      Agregar Material
+      Crear Chapa
     </button>
   </div>
 </form>
@@ -246,3 +137,79 @@ const ubicacionOptions = [
     }
   }
 </style>
+
+<script type="module">
+  document.getElementById('chapas-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('.btn-submit');
+    
+    // Deshabilitar botón durante el envío
+    submitButton.disabled = true;
+    const originalText = submitButton.innerHTML;
+    submitButton.innerHTML = `
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="animate-spin">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Creando...
+    `;
+
+    const body = {
+      codigo: formData.get('codigo'),
+      colada: formData.get('colada'),
+      espesor: formData.get('espesor'),
+      dimensiones: formData.get('dimensiones'),
+      tipo_acero: formData.get('tipo_acero'),
+    };
+
+    try {
+      const res = await fetch('/api/chapas/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      const json = await res.json();
+      
+      if (json.success) {
+        // Mostrar éxito
+        submitButton.innerHTML = `
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          ¡Chapa creada!
+        `;
+        submitButton.style.background = '#10b981';
+        
+        // Recargar la página después de un breve delay
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+      } else {
+        throw new Error(json.error || 'Error al crear la chapa');
+      }
+    } catch (error) {
+      console.error('Error al crear chapa:', error);
+      
+      // Mostrar error
+      submitButton.innerHTML = `
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Error al crear
+      `;
+      submitButton.style.background = '#ef4444';
+      
+      // Restaurar botón después de un delay
+      setTimeout(() => {
+        submitButton.innerHTML = originalText;
+        submitButton.style.background = '';
+        submitButton.disabled = false;
+      }, 2000);
+    }
+  });
+</script>

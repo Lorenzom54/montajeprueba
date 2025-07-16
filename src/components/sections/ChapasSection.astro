@@ -3,13 +3,27 @@ import PageHeader from '../PageHeader.astro';
 import Modal from '../Modal.astro';
 import ChapasForm from '../forms/ChapasForm.astro';
 import DetailModal from '../DetailModal.astro';
+import TableChapa from '../table/TableChapa.astro';
 import ChapaDetail from '../detail/ChapaDetail.astro';
+import { fetchChapas } from '../../lib/chapa_api';
+
+const chapas = await fetchChapas();
+
+// Calcular estadísticas dinámicas
+const totalChapas = chapas.length;
+const tiposUnicos = [...new Set(chapas.map(c => c.tipo_acero).filter(Boolean))].length;
+const chapasPorTipo = chapas.reduce((acc, chapa) => {
+  if (chapa.tipo_acero) {
+    acc[chapa.tipo_acero] = (acc[chapa.tipo_acero] || 0) + 1;
+  }
+  return acc;
+}, {});
 ---
 
 <PageHeader 
   title="Chapas y Perfiles" 
   subtitle="Gestión de materiales base: chapas y perfiles metálicos"
-  actionButton={{ text: "Nuevo Material", onClick: "openModal('modal-nuevo-material')" }}
+  actionButton={{ text: "Nueva Chapa", onClick: "openModal('modal-nueva-chapa')" }}
 />
 
 <div class="chapas-section">
@@ -21,8 +35,8 @@ import ChapaDetail from '../detail/ChapaDetail.astro';
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">2,456</div>
-        <div class="stat-label">Unidades en Stock</div>
+        <div class="stat-number">{totalChapas}</div>
+        <div class="stat-label">Total Chapas</div>
       </div>
     </div>
     
@@ -33,324 +47,72 @@ import ChapaDetail from '../detail/ChapaDetail.astro';
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">45</div>
-        <div class="stat-label">Tipos Diferentes</div>
+        <div class="stat-number">{tiposUnicos}</div>
+        <div class="stat-label">Tipos de Acero</div>
       </div>
     </div>
     
     <div class="stat-card">
-      <div class="stat-icon weight">
+      <div class="stat-icon s275">
         <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">156.8T</div>
-        <div class="stat-label">Peso Total</div>
+        <div class="stat-number">{chapasPorTipo['S275JR'] || 0}</div>
+        <div class="stat-label">S275JR</div>
       </div>
     </div>
     
     <div class="stat-card">
-      <div class="stat-icon value">
+      <div class="stat-icon s355">
         <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">€485K</div>
-        <div class="stat-label">Valor Inventario</div>
+        <div class="stat-number">{chapasPorTipo['S355JR'] || 0}</div>
+        <div class="stat-label">S355JR</div>
       </div>
     </div>
   </div>
 
   <div class="chapas-table">
     <div class="table-header">
-      <h3>Inventario de Materiales</h3>
+      <h3>Inventario de Chapas</h3>
       <div class="table-filters">
-        <select class="filter-select">
-          <option>Todos los materiales</option>
-          <option>Chapas</option>
-          <option>Perfiles</option>
-          <option>Tubos</option>
-          <option>Barras</option>
+        <select class="filter-select" id="tipo-filter">
+          <option value="">Todos los tipos</option>
+          <option value="S235JR">S235JR</option>
+          <option value="S275JR">S275JR</option>
+          <option value="S355JR">S355JR</option>
+          <option value="S460JR">S460JR</option>
+          <option value="S690QL">S690QL</option>
         </select>
-        <select class="filter-select">
-          <option>Todos los grados</option>
-          <option>S235JR</option>
-          <option>S275JR</option>
-          <option>S355JR</option>
-          <option>S460JR</option>
-        </select>
+        <input 
+          type="text" 
+          class="filter-input" 
+          id="search-input"
+          placeholder="Buscar por código o colada..."
+        />
       </div>
     </div>
     
-    <div class="table-container">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Material</th>
-            <th>Tipo</th>
-            <th>Dimensiones</th>
-            <th>Grado</th>
-            <th>Stock</th>
-            <th>Peso Unit.</th>
-            <th>Ubicación</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="material-info">
-                <strong>Chapa Estructural</strong>
-                <span class="material-code">CH-S275-001</span>
-              </div>
-            </td>
-            <td>
-              <div class="tipo-badge chapa">
-                <span class="tipo-icon">▬</span>
-                Chapa
-              </div>
-            </td>
-            <td>
-              <div class="dimensions">
-                <span>6000 × 2000 × 10 mm</span>
-              </div>
-            </td>
-            <td>
-              <span class="grade-badge s275">S275JR</span>
-            </td>
-            <td>
-              <div class="stock-info">
-                <span class="stock-number">24</span>
-                <span class="stock-unit">unidades</span>
-              </div>
-            </td>
-            <td>942 kg</td>
-            <td>
-              <div class="location">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Almacén A - Rack 1
-              </div>
-            </td>
-            <td><span class="status-badge available">Disponible</span></td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" title="Ver detalles" onclick="openModal('detail-chapa-001')">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </button>
-                <button class="btn-icon" title="Editar">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                <button class="btn-icon" title="Reservar">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="material-info">
-                <strong>Perfil IPE 200</strong>
-                <span class="material-code">PR-IPE-002</span>
-              </div>
-            </td>
-            <td>
-              <div class="tipo-badge perfil">
-                <span class="tipo-icon">⫸</span>
-                Perfil
-              </div>
-            </td>
-            <td>
-              <div class="dimensions">
-                <span>IPE 200 × 6000 mm</span>
-              </div>
-            </td>
-            <td>
-              <span class="grade-badge s355">S355JR</span>
-            </td>
-            <td>
-              <div class="stock-info">
-                <span class="stock-number">18</span>
-                <span class="stock-unit">barras</span>
-              </div>
-            </td>
-            <td>133 kg</td>
-            <td>
-              <div class="location">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Almacén B - Zona Perfiles
-              </div>
-            </td>
-            <td><span class="status-badge reserved">Reservado</span></td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" title="Ver detalles" onclick="openModal('detail-chapa-002')">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </button>
-                <button class="btn-icon" title="Editar">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                <button class="btn-icon" title="Liberar">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="material-info">
-                <strong>Tubo Rectangular</strong>
-                <span class="material-code">TB-REC-003</span>
-              </div>
-            </td>
-            <td>
-              <div class="tipo-badge tubo">
-                <span class="tipo-icon">▢</span>
-                Tubo
-              </div>
-            </td>
-            <td>
-              <div class="dimensions">
-                <span>120 × 80 × 5 × 6000 mm</span>
-              </div>
-            </td>
-            <td>
-              <span class="grade-badge s235">S235JR</span>
-            </td>
-            <td>
-              <div class="stock-info">
-                <span class="stock-number">32</span>
-                <span class="stock-unit">barras</span>
-              </div>
-            </td>
-            <td>89 kg</td>
-            <td>
-              <div class="location">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Almacén C - Estante 12
-              </div>
-            </td>
-            <td><span class="status-badge low">Stock Bajo</span></td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-icon" title="Ver detalles" onclick="openModal('detail-chapa-003')">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                </button>
-                <button class="btn-icon" title="Editar">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                <button class="btn-icon" title="Pedir más">
-                  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <TableChapa chapas={chapas} />
   </div>
 </div>
 
-<!-- Modal para Nuevo Material -->
-<Modal id="modal-nuevo-material" title="Nuevo Material" size="lg">
+<!-- Modal para Nueva Chapa -->
+<Modal id="modal-nueva-chapa" title="Nueva Chapa" size="lg">
   <ChapasForm />
 </Modal>
 
-<!-- Modales de Detalles -->
-<DetailModal id="detail-chapa-001" title="Chapa Estructural S275JR" type="chapa">
-  <ChapaDetail chapa={{
-    id: "CH-S275-001",
-    descripcion: "Chapa Estructural",
-    tipo: "Chapa",
-    grado: "S275JR",
-    proveedor: "ArcelorMittal",
-    largo: 6000,
-    ancho: 2000,
-    espesor: 10,
-    pesoUnitario: 942,
-    stock: 24,
-    stockMinimo: 5,
-    precio: 450.00,
-    ubicacion: "Almacén A - Rack 1",
-    fechaRecepcion: "10/02/2024",
-    lote: "LOT-2024-001",
-    observaciones: "Material de alta calidad para estructuras principales. Certificado según EN 10025."
-  }} />
-</DetailModal>
-
-<DetailModal id="detail-chapa-002" title="Perfil IPE 200" type="chapa">
-  <ChapaDetail chapa={{
-    id: "PR-IPE-002",
-    descripcion: "Perfil IPE 200",
-    tipo: "Perfil",
-    grado: "S355JR",
-    proveedor: "Celsa Group",
-    largo: 6000,
-    ancho: 200,
-    espesor: 8.5,
-    pesoUnitario: 133,
-    stock: 18,
-    stockMinimo: 8,
-    precio: 280.00,
-    ubicacion: "Almacén B - Zona Perfiles",
-    fechaRecepcion: "05/02/2024",
-    lote: "LOT-2024-002",
-    observaciones: "Perfil laminado en caliente para vigas secundarias. Reservado para obra Hospital Central."
-  }} />
-</DetailModal>
-
-<DetailModal id="detail-chapa-003" title="Tubo Rectangular" type="chapa">
-  <ChapaDetail chapa={{
-    id: "TB-REC-003",
-    descripcion: "Tubo Rectangular",
-    tipo: "Tubo",
-    grado: "S235JR",
-    proveedor: "Sidenor",
-    largo: 6000,
-    ancho: 120,
-    espesor: 5,
-    pesoUnitario: 89,
-    stock: 32,
-    stockMinimo: 15,
-    precio: 165.00,
-    ubicacion: "Almacén C - Estante 12",
-    fechaRecepcion: "28/01/2024",
-    lote: "LOT-2024-003",
-    observaciones: "Stock bajo - programar pedido. Tubo conformado en frío para estructuras auxiliares."
-  }} />
-</DetailModal>
+<!-- Modales de Detalles dinámicos -->
+{chapas.map((chapa) => (
+  <DetailModal id={`detail-chapa-${chapa.id}`} title={`Chapa #${chapa.codigo}`} type="chapa">
+    <ChapaDetail chapa={chapa} />
+  </DetailModal>
+))}
 
 <style>
   .chapas-section {
@@ -387,8 +149,8 @@ import ChapaDetail from '../detail/ChapaDetail.astro';
 
   .stat-icon.stock { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
   .stat-icon.types { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-  .stat-icon.weight { background: linear-gradient(135deg, #f59e0b, #d97706); }
-  .stat-icon.value { background: linear-gradient(135deg, #10b981, #059669); }
+  .stat-icon.s275 { background: linear-gradient(135deg, #10b981, #059669); }
+  .stat-icon.s355 { background: linear-gradient(135deg, #f59e0b, #d97706); }
 
   .stat-content {
     flex: 1;
@@ -437,7 +199,7 @@ import ChapaDetail from '../detail/ChapaDetail.astro';
     gap: 12px;
   }
 
-  .filter-select {
+  .filter-select, .filter-input {
     padding: 8px 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
@@ -446,177 +208,8 @@ import ChapaDetail from '../detail/ChapaDetail.astro';
     color: #374151;
   }
 
-  .table-container {
-    overflow-x: auto;
-  }
-
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .data-table th {
-    padding: 16px;
-    text-align: left;
-    font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .data-table td {
-    padding: 16px;
-    border-bottom: 1px solid #f3f4f6;
-    vertical-align: middle;
-  }
-
-  .data-table tr:hover {
-    background: #f9fafb;
-  }
-
-  .material-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .material-code {
-    font-size: 12px;
-    color: #6b7280;
-    font-family: 'Monaco', 'Menlo', monospace;
-  }
-
-  .tipo-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .tipo-badge.chapa {
-    background: #dbeafe;
-    color: #1d4ed8;
-  }
-
-  .tipo-badge.perfil {
-    background: #d1fae5;
-    color: #065f46;
-  }
-
-  .tipo-badge.tubo {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .tipo-icon {
-    font-size: 10px;
-  }
-
-  .dimensions {
-    font-size: 12px;
-    color: #6b7280;
-    font-family: 'Monaco', 'Menlo', monospace;
-  }
-
-  .grade-badge {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .grade-badge.s235 {
-    background: #e0e7ff;
-    color: #3730a3;
-  }
-
-  .grade-badge.s275 {
-    background: #dcfce7;
-    color: #166534;
-  }
-
-  .grade-badge.s355 {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .stock-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .stock-number {
-    font-weight: 600;
-    color: #111827;
-  }
-
-  .stock-unit {
-    font-size: 12px;
-    color: #6b7280;
-  }
-
-  .location {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #6b7280;
-  }
-
-  .status-badge {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .status-badge.available {
-    background: #d1fae5;
-    color: #065f46;
-  }
-
-  .status-badge.reserved {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .status-badge.low {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-
-  .action-buttons {
-    display: flex;
-    gap: 8px;
-  }
-
-  .btn-icon {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: #f3f4f6;
-    color: #6b7280;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .btn-icon:hover {
-    background: #e5e7eb;
-    color: #374151;
+  .filter-input {
+    min-width: 200px;
   }
 
   @media (max-width: 768px) {
@@ -633,14 +226,39 @@ import ChapaDetail from '../detail/ChapaDetail.astro';
     .table-filters {
       flex-direction: column;
     }
-
-    .data-table {
-      font-size: 14px;
-    }
-
-    .data-table th,
-    .data-table td {
-      padding: 12px 8px;
-    }
   }
 </style>
+
+<script type="module">
+  // Filtros en tiempo real
+  document.addEventListener('DOMContentLoaded', function() {
+    const tipoFilter = document.getElementById('tipo-filter');
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+
+    function filterTable() {
+      const tipoValue = tipoFilter.value.toLowerCase();
+      const searchValue = searchInput.value.toLowerCase();
+
+      tableRows.forEach(row => {
+        const tipo = row.querySelector('.tipo-badge').textContent.toLowerCase();
+        const codigo = row.cells[0].textContent.toLowerCase();
+        const colada = row.cells[4].textContent.toLowerCase();
+
+        const matchesTipo = !tipoValue || tipo.includes(tipoValue);
+        const matchesSearch = !searchValue || 
+          codigo.includes(searchValue) || 
+          colada.includes(searchValue);
+
+        if (matchesTipo && matchesSearch) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    tipoFilter.addEventListener('change', filterTable);
+    searchInput.addEventListener('input', filterTable);
+  });
+</script>
