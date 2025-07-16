@@ -1,12 +1,13 @@
 ---
 import FormField from './FormField.astro';
 
+// Opciones más básicas para tipo de acero
 const tipoAceroOptions = [
-  { value: 'S235JR', label: 'S235JR' },
-  { value: 'S275JR', label: 'S275JR' },
-  { value: 'S355JR', label: 'S355JR' },
-  { value: 'S460JR', label: 'S460JR' },
-  { value: 'S690QL', label: 'S690QL' }
+  { value: 'S235', label: 'S235' },
+  { value: 'S275', label: 'S275' },
+  { value: 'S355', label: 'S355' },
+  { value: 'S460', label: 'S460' },
+  { value: 'S690', label: 'S690' }
 ];
 ---
 
@@ -16,20 +17,21 @@ const tipoAceroOptions = [
       <FormField 
         label="Código de la Chapa" 
         name="codigo" 
+        type="number"
         required={true}
-        placeholder="Ej: CH-001"
+        placeholder="Ej: 1001"
       />
       
       <FormField 
         label="Colada" 
         name="colada" 
-        placeholder="Ej: COL-2024-001"
+        placeholder="Ej: COL2024001"
       />
       
       <FormField 
         label="Espesor" 
         name="espesor" 
-        placeholder="Ej: 10mm"
+        placeholder="Ej: 10"
       />
     </div>
     
@@ -37,7 +39,7 @@ const tipoAceroOptions = [
       <FormField 
         label="Dimensiones" 
         name="dimensiones" 
-        placeholder="Ej: 6000x2000mm"
+        placeholder="Ej: 6000x2000"
       />
       
       <FormField 

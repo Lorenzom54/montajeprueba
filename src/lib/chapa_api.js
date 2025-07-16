@@ -33,23 +33,17 @@ export async function fetchChapaById(id) {
 }
 
 // Crear nueva chapa
-export async function addChapa({ codigo, colada, espesor, dimensiones, tipo_acero }) {
+export async function addChapa(chapaData) {
+  console.log('Intentando insertar chapa:', chapaData); // Para debug
+  
   const { data, error } = await supabase
     .from('chapas')
-    .insert([
-      {
-        codigo,
-        colada,
-        espesor,
-        dimensiones,
-        tipo_acero
-      }
-    ])
+    .insert([chapaData])
     .select()
 
   if (error) {
-    console.error('Error al insertar chapa:', error.message);
-    return { success: false, error: error.message };
+    console.error('Error completo de Supabase:', error);
+    return { success: false, error: error.message, details: error };
   }
 
   return { success: true, data: data[0] };

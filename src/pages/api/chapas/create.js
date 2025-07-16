@@ -5,6 +5,8 @@ export const prerender = false;
 export async function POST({ request }) {
   try {
     const body = await request.json();
+    
+    console.log('Datos recibidos:', body); // Para debug
 
     const { codigo, colada, espesor, dimensiones, tipo_acero } = body;
 
@@ -12,22 +14,28 @@ export async function POST({ request }) {
     if (!codigo || !tipo_acero) {
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'Los campos código y tipo de acero son obligatorios' 
+        error: 'Los campos código y tipo de acero son obligatorios'
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
+    
+    // Preparar datos para inserción
+    const chapaData = {
+      codigo: parseInt(codigo), // Asegurar que sea número
+      tipo_acero: tipo_acero,
+      colada: colada || null,
+      espesor: espesor || null,
+      dimensiones: dimensiones || null
+    };
+    
+    console.log('Datos a insertar:', chapaData); // Para debug
 
-    const result = await addChapa({
-      codigo,
-      colada,
-      espesor,
-      dimensiones,
-      tipo_acero,
-    });
+    const result = await addChapa(chapaData);
 
     if (!result.success) {
+      console.error('Error en addChapa:', result.error); // Para debug
       return new Response(JSON.stringify(result), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
